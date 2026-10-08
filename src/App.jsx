@@ -6,6 +6,7 @@ import Footer from './components/Footer.jsx'
 import CartDrawer from './components/CartDrawer.jsx'
 import Toast from './components/Toast.jsx'
 import Checkout from './components/Checkout.jsx'
+import CookieNotice from './components/CookieNotice.jsx'
 import Home from './pages/Home.jsx'
 import Collection from './pages/Collection.jsx'
 import Product from './pages/Product.jsx'
@@ -66,6 +67,7 @@ export default function App() {
       <CartDrawer />
       <Checkout />
       <Toast />
+      <CookieNotice />
     </ShopProvider>
   )
 }

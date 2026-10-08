@@ -4,6 +4,7 @@ import { NIGERIAN_STATES, SHIPPING } from '../data/site.js'
 import { priceOrder, shippingFee, validEmail, validPhone } from '../data/pricing.js'
 import { formatMoney, useShop } from '../context/ShopContext.jsx'
 import { isTestKey, paymentsReady, startPayment, verifyPayment, SERVER_MODE } from '../payments/paystack.js'
+import Money from './Money.jsx'
 
 const naira = (n) => formatMoney(n, 'NGN')
 const EMPTY = { name: '', email: '', phone: '', address: '', city: '', state: '', note: '' }
@@ -134,7 +135,7 @@ export default function Checkout() {
             {!done.verified && <p className="notice">Keep this reference and send it to us on the Get in touch page so we can match your order.</p>}
             <dl className="facts co-facts">
               <div><dt>Reference</dt><dd>{done.reference}</dd></div>
-              <div><dt>Paid</dt><dd>{naira(done.total)}</dd></div>
+              <div><dt>Paid</dt><dd><Money amount={done.total} currency="NGN" /></dd></div>
             </dl>
             <ul className="co-lines">
               {done.lines.map((l) => <li key={l.id + l.size}>{l.qty} × {l.title} <span>({l.size})</span></li>)}
@@ -184,17 +185,18 @@ export default function Checkout() {
               <ul className="co-lines">
                 {cart.map((i) => {
                   const p = byId(i.id)
-                  return <li key={i.id + i.size}>{i.qty} × {p.title} <span>({i.size})</span><b>{naira(p.price * i.qty)}</b></li>
+                  return <li key={i.id + i.size}><span className="co-line-name">{i.qty} × {p.title} <span>({i.size})</span></span><b><Money amount={p.price * i.qty} currency="NGN" /></b></li>
                 })}
               </ul>
-              <div className="sub-row"><span>Subtotal</span><span>{naira(subtotal)}</span></div>
-              <div className="sub-row light"><span>Delivery</span><span>{fee === null ? 'Choose a state' : fee === 0 ? 'Free' : naira(fee)}</span></div>
-              <div className="sub-row big"><span>Total</span><span>{total === null ? naira(subtotal) : naira(total)}</span></div>
+              <div className="sub-row"><span>Subtotal</span><span><Money amount={subtotal} currency="NGN" /></span></div>
+              <div className="sub-row light"><span>Delivery</span><span>{fee === null ? 'Choose a state' : fee === 0 ? 'Free' : <Money amount={fee} currency="NGN" />}</span></div>
+              <div className="sub-row big"><span>Total</span><span><Money amount={total === null ? subtotal : total} currency="NGN" /></span></div>
               <small>Free delivery over {naira(SHIPPING.freeOver)}. You pay in naira (₦) by card, bank transfer or USSD on the next screen.</small>
             </div>
 
             {notice && <p className="notice" role="alert">{notice}</p>}
-            <button className="btn block" type="submit" disabled={busy || !paymentsReady}>
+            <p className="co-policy">By placing your order, you acknowledge our <a href="#/page/privacy-policy">Privacy policy</a> and <a href="#/page/cookie-policy">Cookie policy</a>.</p>
+            <button className="btn block pay-button" type="submit" disabled={busy || !paymentsReady}>
               {busy ? 'Opening Paystack…' : `Pay ${naira(total === null ? subtotal : total)} with Paystack`}
             </button>
             <button type="button" className="x back-cart" onClick={() => { closeCheckout(); openCart() }} disabled={busy}>Back to cart</button>

@@ -5,11 +5,12 @@ import { useShop } from '../context/ShopContext.jsx'
 import { useDocumentTitle } from '../hooks/useDocumentTitle.js'
 import { ProductArt } from '../components/Art.jsx'
 import ProductCard from '../components/ProductCard.jsx'
+import Money from '../components/Money.jsx'
 import NotFound from './NotFound.jsx'
 
 export default function Product({ id }) {
   const p = byId(id)
-  const { money, add, showToast } = useShop()
+  const { currency, add, showToast } = useShop()
   const [view, setView] = useState(1)
   const [qty, setQty] = useState(1)
   const [size, setSize] = useState('')
@@ -53,7 +54,7 @@ export default function Product({ id }) {
 
         <div className="pdp-info">
           <h1>{p.title}</h1>
-          <p className="price big">{money(p.price)}</p>
+          <p className="price big"><Money amount={p.price} currency={currency} /></p>
           <p>{p.blurb}</p>
 
           {family.length > 1 && (

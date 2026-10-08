@@ -1,9 +1,10 @@
 import { ProductArt } from './Art.jsx'
 import { useShop } from '../context/ShopContext.jsx'
 import { needsSize, sizesFor } from '../data/catalog.js'
+import Money from './Money.jsx'
 
 export default function ProductCard({ product: p }) {
-  const { money, add } = useShop()
+  const { add, currency } = useShop()
   return (
     <article className="card">
       <a className="card-media" href={`#/product/${p.id}`} aria-label={p.title}>
@@ -13,7 +14,7 @@ export default function ProductCard({ product: p }) {
       </a>
       <div className="card-info">
         <a className="card-title" href={`#/product/${p.id}`}>{p.title}</a>
-        <span className="price">{money(p.price)}</span>
+        <span className="price"><Money amount={p.price} currency={currency} /></span>
       </div>
       {needsSize(p) ? (
         <a className="btn btn-line block" href={`#/product/${p.id}`}>Choose size</a>

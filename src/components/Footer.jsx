@@ -19,6 +19,8 @@ export default function Footer() {
             <li><a href="#/page/shipping-and-returns">Shipping and returns</a></li>
             <li><a href="#/page/our-promise">Our promise</a></li>
             <li><a href="#/page/privacy-policy">Privacy policy</a></li>
+            <li><a href="#/page/cookie-policy">Cookie policy</a></li>
+            <li><a href="#cookie-settings" onClick={(event) => { event.preventDefault(); window.dispatchEvent(new Event('fc:open-cookie-settings')) }}>Cookie settings</a></li>
           </ul>
         </nav>
         <nav aria-label="Social">

@@ -2,9 +2,10 @@ import { useEffect, useRef } from 'react'
 import { byId } from '../data/catalog.js'
 import { useShop } from '../context/ShopContext.jsx'
 import { ProductArt } from './Art.jsx'
+import Money from './Money.jsx'
 
 export default function CartDrawer() {
-  const { cart, drawerOpen, closeCart, step, remove, subtotal, money, openCheckout } = useShop()
+  const { cart, drawerOpen, closeCart, step, remove, subtotal, currency, openCheckout } = useShop()
   const drawerRef = useRef(null)
   const closeRef = useRef(null)
 
@@ -56,7 +57,7 @@ export default function CartDrawer() {
                 <div className="cthumb"><ProductArt product={p} decorative /></div>
                 <div>
                   <a className="ctitle" href={`#/product/${p.id}`} onClick={closeCart}>{p.title}</a>
-                  <div className="cprice">{money(p.price)}{item.size !== 'One size' && <> · {item.size}</>}</div>
+                  <div className="cprice"><Money amount={p.price} currency={currency} />{item.size !== 'One size' && <> · {item.size}</>}</div>
                   <div className="qty" role="group" aria-label={`Quantity for ${p.title}, ${item.size}`}>
                     <button aria-label={`Decrease quantity of ${p.title}`} onClick={() => step(p.id, item.size, -1)}>&minus;</button>
                     <span>{item.qty}</span>
@@ -75,7 +76,7 @@ export default function CartDrawer() {
           </div>
         ) : (
           <div className="drawer-foot">
-            <div className="sub-row"><span>Subtotal</span><span>{money(subtotal)}</span></div>
+            <div className="sub-row"><span>Subtotal</span><span><Money amount={subtotal} currency={currency} /></span></div>
             <small>Delivery is calculated at checkout.</small>
             <button className="btn block" onClick={openCheckout}>Checkout</button>
           </div>

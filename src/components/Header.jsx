@@ -14,12 +14,13 @@ const SHOP_LINKS = [
 
 function CurrencySelect() {
   const { currency, setCurrency } = useShop()
+
   return (
-    <label className="cur">
+    <label className="cur cur-header">
       <span className="sr">Currency</span>
       <select value={currency} onChange={(e) => setCurrency(e.target.value)}>
-        {Object.entries(CURRENCIES).map(([code, c]) => (
-          <option key={code} value={code}>{c.label}</option>
+        {Object.keys(CURRENCIES).map((code) => (
+          <option key={code} value={code}>{code}</option>
         ))}
       </select>
     </label>
@@ -104,7 +105,6 @@ export default function Header({ routeKey }) {
           ))}
           <li><a href="#/about">About me</a></li>
         </ul>
-        <CurrencySelect />
       </div>
     </header>
   )
