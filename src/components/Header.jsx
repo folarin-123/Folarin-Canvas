@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { CURRENCIES } from '../data/catalog.js'
 import { BRAND } from '../data/site.js'
 import { useShop } from '../context/ShopContext.jsx'
+import CurrencySwitcher from './CurrencySwitcher.jsx'
 
 const SHOP_LINKS = [
   ['sets', 'Complete outfits'],
@@ -11,21 +11,6 @@ const SHOP_LINKS = [
   ['accessories', 'Caps and gele'],
   ['all-products', 'Shop all'],
 ]
-
-function CurrencySelect() {
-  const { currency, setCurrency } = useShop()
-
-  return (
-    <label className="cur cur-header">
-      <span className="sr">Currency</span>
-      <select value={currency} onChange={(e) => setCurrency(e.target.value)}>
-        {Object.keys(CURRENCIES).map((code) => (
-          <option key={code} value={code}>{code}</option>
-        ))}
-      </select>
-    </label>
-  )
-}
 
 export default function Header({ routeKey }) {
   const { count, openCart } = useShop()
@@ -85,7 +70,7 @@ export default function Header({ routeKey }) {
         </div>
         <a className="wordmark" href="#/" aria-label={`${BRAND}, home`}>{BRAND}</a>
         <div className="util">
-          <CurrencySelect />
+          <div className="desktop-currency"><CurrencySwitcher variant="menu" /></div>
           <button className="cart-btn" aria-label="Open cart" onClick={openCart}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
               <path d="M5 8h14l-1 12H6L5 8z" />
@@ -105,6 +90,7 @@ export default function Header({ routeKey }) {
           ))}
           <li><a href="#/about">About me</a></li>
         </ul>
+        <CurrencySwitcher variant="pills" />
       </div>
     </header>
   )

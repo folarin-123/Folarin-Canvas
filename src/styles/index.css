@@ -66,7 +66,7 @@ main:focus{outline:none}
 /* ---------- Announcement + header ---------- */
 .announce{background:var(--bar);color:var(--on-brand);text-align:center;font-size:.875rem;padding:.6rem 1rem}
 .site-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--brand);color:var(--on-brand)}
-.hdr{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:.75rem;max-width:90rem;margin:0 auto;padding:.85rem max(var(--gutter),env(safe-area-inset-right,0px)) .85rem max(var(--gutter),env(safe-area-inset-left,0px))}
+.hdr{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:.75rem;max-width:90rem;margin:0 auto;padding:.85rem max(var(--gutter),env(safe-area-inset-right,0px)) .85rem max(var(--gutter),env(safe-area-inset-left,0px))}
 .nav{display:flex;align-items:center;gap:1.9rem}
 .nav a,.nav-link{color:inherit;font:500 .9375rem/1 var(--sans);text-decoration:none;background:none;border:0;padding:.5rem 0;cursor:pointer;display:inline-flex;align-items:center;gap:.35rem}
 .nav a:hover,.nav-link:hover{text-decoration:underline;text-underline-offset:.45em}
@@ -77,8 +77,13 @@ main:focus{outline:none}
 .nav .menu a:hover{background:var(--tile);text-decoration:none}
 .wordmark{font:500 clamp(1.1rem,.8rem + 1.1vw,1.75rem)/1.1 var(--serif);letter-spacing:.03em;text-decoration:none;color:inherit;white-space:nowrap}
 .util{display:flex;justify-content:flex-end;align-items:center;gap:1.1rem}
-.cur select{font:500 .875rem var(--sans);background:transparent;color:inherit;border:1px solid rgba(238,240,232,.35);border-radius:2px;padding:.4rem .5rem;min-height:44px;cursor:pointer}
-.cur option{color:#0e231a;background:#f6f7f2}
+.currency-menu-wrap{position:relative}
+.currency-menu-trigger{color:inherit;font:500 .9375rem/1 var(--sans);background:none;border:0;padding:.5rem 0;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem}
+.currency-menu-trigger:hover{text-decoration:underline;text-underline-offset:.45em}
+.currency-menu{position:absolute;right:0;top:calc(100% + .45rem);z-index:5;min-width:8.5rem;padding:.35rem;background:var(--surface);color:var(--ink);border:1px solid var(--line);box-shadow:0 8px 20px rgba(4,13,9,.14)}
+.currency-menu-option{width:100%;min-height:2.75rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.55rem .7rem;background:none;border:0;color:inherit;text-align:left;font:500 .9375rem var(--sans);cursor:pointer}
+.currency-menu-option:hover,.currency-menu-option[aria-checked="true"]{background:var(--tile)}
+.currency-menu-trigger:focus:not(:focus-visible),.currency-menu-option:focus:not(:focus-visible),.currency-pill:focus:not(:focus-visible){outline:none}
 .cart-btn{display:inline-flex;align-items:center;gap:.5rem;background:none;border:0;color:inherit;font:500 .9375rem/1 var(--sans);cursor:pointer;padding:.5rem 0}
 .count{min-width:1.4rem;height:1.4rem;border-radius:99px;background:var(--accent);color:var(--bar);font-size:.75rem;font-weight:600;display:inline-grid;place-items:center;padding-inline:.35rem}
 .menu-btn{display:none;background:none;border:0;color:inherit;padding:.5rem;margin-left:-.5rem;cursor:pointer}
@@ -86,14 +91,23 @@ main:focus{outline:none}
 #mnav ul{list-style:none;margin:0;padding:0}
 #mnav a{display:block;padding:.8rem 0;text-decoration:none;border-bottom:1px solid rgba(238,240,232,.12)}
 #mnav .sub a{padding-left:1rem;font-size:.9375rem;opacity:.9}
-#mnav .cur{display:block;margin-top:1rem}
+#mnav .currency-pills{margin-top:1rem}
+.currency-pills h2{font:500 .875rem/1.2 var(--sans);letter-spacing:0;margin:0 0 .5rem}
+.pill-group{display:flex;gap:.35rem}
+.currency-pill{flex:1 1 0;min-width:0;min-height:44px;padding:.5rem .3rem;border:1px solid currentColor;border-radius:999px;background:transparent;color:inherit;font:500 .875rem/1 var(--sans);cursor:pointer}
+.currency-pill.selected{background:var(--accent);border-color:var(--accent);color:var(--bar)}
+.currency-pills>p{margin:.4rem 0 0;font-size:.65625rem;line-height:1.35;white-space:nowrap;opacity:.85}
+.footer-currency{margin-top:2rem}
+.footer-currency .currency-pills{max-width:22rem}
+.footer-currency .pill-group{max-width:20rem}
+.footer-currency .currency-pill{max-width:5rem}
+.currency-note{min-height:3.2em;margin:-.8rem 0 1rem!important;color:var(--muted);font-size:.875rem}
 @media (max-width:859px){
-  .hdr{grid-template-columns:2.75rem minmax(0,1fr) auto;gap:.35rem}
   .nav{display:none}
   .menu-btn{display:inline-flex}
-  .site-header .wordmark{justify-self:center;font-size:clamp(.88rem,4.2vw,1.2rem)}
-  .util{gap:.3rem}
-  .cur-header select{font-size:1rem;padding:.35rem .3rem;min-width:3.65rem}
+  .site-header .wordmark{justify-self:center}
+  .desktop-currency{display:none}
+  .util{gap:0}
   .cart-btn{gap:.25rem;min-width:2.75rem;min-height:2.75rem;justify-content:center}
 }
 @media (min-width:860px){#mnav{display:none!important}}
@@ -259,10 +273,6 @@ details p{margin:.75rem 0 0;color:var(--muted);max-width:50ch}
 }
 @media (max-width:420px){
   .cart-btn .lbl{display:none}
-  .site-header .wordmark{font-size:clamp(.88rem,4.2vw,1.05rem)}
-  .hdr{gap:.25rem}
-  .util{gap:.15rem}
-  .cur-header select{min-width:3.35rem;padding-inline:.2rem}
   .pay-button{font-size:.8125rem}
   .buy{flex-wrap:wrap}
   .buy .btn{flex:1 1 100%}
@@ -270,9 +280,7 @@ details p{margin:.75rem 0 0;color:var(--muted);max-width:50ch}
   .announce{font-size:.8125rem}
 }
 @media (max-width:359px){
-  .hdr{grid-template-columns:2.5rem minmax(0,1fr) auto;padding-left:max(.75rem,env(safe-area-inset-left,0px));padding-right:max(.75rem,env(safe-area-inset-right,0px))}
-  .site-header .wordmark{font-size:.88rem}
-  .cur-header select{min-width:3.1rem}
+  .hdr{padding-left:max(.75rem,env(safe-area-inset-left,0px));padding-right:max(.75rem,env(safe-area-inset-right,0px))}
   .grid,.grid.five{grid-template-columns:1fr}
   .card-media{aspect-ratio:1/1}
   .crow{grid-template-columns:4rem 1fr}
@@ -290,8 +298,7 @@ details p{margin:.75rem 0 0;color:var(--muted);max-width:50ch}
   .hero-copy{padding-block:2rem}
 }
 @media (pointer:coarse){
-  select,input,textarea,.cur select{font-size:16px}
-  .cur select{padding:.6rem .7rem;min-height:44px}
+  select,input,textarea{font-size:16px}
   .menu-btn,.cart-btn{min-height:44px;min-width:44px;justify-content:center}
   .qty button,.crow .qty button{width:2.75rem;height:2.75rem}
   .rm,.x{padding:.7rem .3rem}

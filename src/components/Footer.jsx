@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { BRAND, SOCIALS } from '../data/site.js'
+import CurrencySwitcher from './CurrencySwitcher.jsx'
 
 export default function Footer() {
   const [year, setYear] = useState('')
@@ -33,6 +34,9 @@ export default function Footer() {
             ))}
           </ul>
         </nav>
+      </div>
+      <div className="wrap footer-currency">
+        <CurrencySwitcher variant="pills" />
       </div>
       <div className="wrap legal">&copy; {year} {BRAND}. Payments by Paystack. Prices in other currencies are indicative.</div>
     </footer>
