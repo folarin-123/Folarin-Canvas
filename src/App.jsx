@@ -42,7 +42,7 @@ export default function App() {
       firstRender.current = false
       return
     }
-    window.scrollTo(0, 0)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
     mainRef.current?.focus({ preventScroll: true })
   }, [route.key])
 
@@ -60,7 +60,9 @@ export default function App() {
       </a>
       <Header routeKey={route.key} />
       <main id="main" tabIndex={-1} ref={mainRef}>
-        <Page route={route} />
+        <div key={route.key} className="route-enter">
+          <Page route={route} />
+        </div>
       </main>
       <Footer />
       <CartDrawer />

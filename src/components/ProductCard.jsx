@@ -1,16 +1,29 @@
-import { ProductArt } from './Art.jsx'
+import { useEffect, useRef, useState } from 'react'
+import ProductVisual from './ProductVisual.jsx'
 import { useShop } from '../context/ShopContext.jsx'
 import { needsSize, sizesFor } from '../data/catalog.js'
 import Money from './Money.jsx'
 
 export default function ProductCard({ product: p }) {
   const { add, currency } = useShop()
+  const [added, setAdded] = useState(false)
+  const feedbackTimer = useRef(0)
+
+  useEffect(() => () => clearTimeout(feedbackTimer.current), [])
+
+  function addToCart() {
+    add(p.id, sizesFor(p)[0], 1)
+    setAdded(true)
+    clearTimeout(feedbackTimer.current)
+    feedbackTimer.current = setTimeout(() => setAdded(false), 1400)
+  }
+
   return (
     <article className="card">
       <a className="card-media" href={`#/product/${p.id}`} aria-label={p.title}>
         {p.tag && <span className="badge">{p.tag}</span>}
-        <ProductArt product={p} view={1} className="v1" decorative />
-        <ProductArt product={p} view={2} className="v2" decorative />
+        <ProductVisual product={p} view={1} className="v1" decorative />
+        {(!p.image || p.detailImage) && <ProductVisual product={p} view={2} className="v2" decorative />}
       </a>
       <div className="card-info">
         <a className="card-title" href={`#/product/${p.id}`}>{p.title}</a>
@@ -19,7 +32,9 @@ export default function ProductCard({ product: p }) {
       {needsSize(p) ? (
         <a className="btn btn-line block" href={`#/product/${p.id}`}>Choose size</a>
       ) : (
-        <button className="btn btn-line block" onClick={() => add(p.id, sizesFor(p)[0], 1)}>Add to cart</button>
+        <button className={`btn btn-line block${added ? ' added' : ''}`} onClick={addToCart} aria-live="polite">
+          {added ? <><span aria-hidden="true">✓</span> Added!</> : 'Add to cart'}
+        </button>
       )}
     </article>
   )

@@ -93,10 +93,15 @@ export default function Checkout() {
     try {
       await startPayment(order, {
         onSuccess: async (reference) => {
-          const check = await verifyPayment(reference, order)
-          setDone({ reference, verified: check.ok, lines: priced.lines, total: priced.total, name: customer.name.split(' ')[0] })
-          if (check.ok) clearCart()
-          setBusy(false)
+          try {
+            const check = await verifyPayment(reference, order)
+            setDone({ reference, verified: check.ok, lines: priced.lines, total: priced.total, name: customer.name.split(' ')[0] })
+            if (check.ok) clearCart()
+          } catch {
+            setDone({ reference, verified: false, lines: priced.lines, total: priced.total, name: customer.name.split(' ')[0] })
+          } finally {
+            setBusy(false)
+          }
         },
         onCancel: () => {
           setBusy(false)
@@ -121,7 +126,7 @@ export default function Checkout() {
       <div className="backdrop show" onClick={() => !busy && closeCheckout()} />
       <div className="dialog" role="dialog" aria-modal="true" aria-labelledby="co-title" ref={dialogRef}>
         <div className="drawer-head">
-          <h2 id="co-title">{done ? (done.verified ? 'Thank you' : 'Payment received') : 'Checkout'}</h2>
+          <h2 id="co-title">{done ? (done.verified ? 'Thank you' : 'Payment status pending') : 'Checkout'}</h2>
           <button className="x" ref={closeRef} onClick={closeCheckout} disabled={busy}>Close</button>
         </div>
 
@@ -130,12 +135,12 @@ export default function Checkout() {
             <p>
               {done.verified
                 ? `Thank you, ${done.name}. Your order is confirmed and we have started on it.`
-                : `Thank you, ${done.name}. Your payment went through, but we could not confirm it automatically.`}
+                : `Thank you, ${done.name}. We could not verify this payment with the server, so your order is not confirmed yet.`}
             </p>
-            {!done.verified && <p className="notice">Keep this reference and send it to us on the Get in touch page so we can match your order.</p>}
+            {!done.verified && <p className="notice">Do not pay again yet. Keep this reference and contact us so we can check the payment status.</p>}
             <dl className="facts co-facts">
               <div><dt>Reference</dt><dd>{done.reference}</dd></div>
-              <div><dt>Paid</dt><dd><Money amount={done.total} currency="NGN" /></dd></div>
+              <div><dt>{done.verified ? 'Paid' : 'Order total'}</dt><dd><Money amount={done.total} currency="NGN" /></dd></div>
             </dl>
             <ul className="co-lines">
               {done.lines.map((l) => <li key={l.id + l.size}>{l.qty} × {l.title} <span>({l.size})</span></li>)}
@@ -149,7 +154,9 @@ export default function Checkout() {
           <form className="co-body" onSubmit={onSubmit} noValidate>
             {!paymentsReady && (
               <p className="notice" role="alert">
-                Payments are not set up yet. Add <code>VITE_PAYSTACK_PUBLIC_KEY</code> to a <code>.env</code> file and restart (see the README).
+                {import.meta.env.PROD
+                  ? 'Online payments are disabled until server-side payment verification is configured.'
+                  : <>Payments are not set up yet. Add <code>VITE_PAYSTACK_PUBLIC_KEY</code> to a <code>.env</code> file and restart (see the README).</>}
               </p>
             )}
             {paymentsReady && isTestKey && !SERVER_MODE && <p className="notice">Test mode: no real money moves. Use Paystack’s test card.</p>}

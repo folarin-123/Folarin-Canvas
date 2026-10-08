@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { COLLECTIONS, PRODUCTS, byId, detailsFor, needsSize, sizesFor } from '../data/catalog.js'
 import { BRAND } from '../data/site.js'
 import { useShop } from '../context/ShopContext.jsx'
 import { useDocumentTitle } from '../hooks/useDocumentTitle.js'
-import { ProductArt } from '../components/Art.jsx'
+import ProductVisual from '../components/ProductVisual.jsx'
 import ProductCard from '../components/ProductCard.jsx'
 import Money from '../components/Money.jsx'
 import NotFound from './NotFound.jsx'
@@ -14,6 +14,9 @@ export default function Product({ id }) {
   const [view, setView] = useState(1)
   const [qty, setQty] = useState(1)
   const [size, setSize] = useState('')
+  const [added, setAdded] = useState(false)
+  const addedTimer = useRef(0)
+  useEffect(() => () => clearTimeout(addedTimer.current), [])
   useDocumentTitle(`${p ? p.title : 'Not found'} | ${BRAND}`)
   if (!p) return <NotFound />
 
@@ -24,9 +27,10 @@ export default function Product({ id }) {
     const chosen = sized ? size : sizes[0]
     if (!chosen) {
       showToast('Choose a size first.')
-      return
+      return false
     }
     add(p.id, chosen, qty)
+    return true
   }
   const clamp = (n) => Math.max(1, Math.min(99, n))
   let related = PRODUCTS.filter((x) => x.id !== p.id && x.kind === p.kind)
@@ -41,12 +45,12 @@ export default function Product({ id }) {
       <div className="pdp-grid">
         <div className="gallery">
           <div className="gallery-main">
-            <ProductArt product={p} view={view} className="on" />
+            <ProductVisual product={p} view={view} className="on" />
           </div>
           <div className="thumbs">
             {[1, 2].map((v) => (
               <button key={v} className="thumb" aria-pressed={view === v} aria-label={v === 1 ? 'Show main view' : 'Show fabric close-up'} onClick={() => setView(v)}>
-                <ProductArt product={p} view={v} decorative />
+                <ProductVisual product={p} view={v} decorative />
               </button>
             ))}
           </div>
@@ -86,7 +90,18 @@ export default function Product({ id }) {
               <input type="number" min="1" max="99" value={qty} aria-label="Quantity" onChange={(e) => setQty(clamp(parseInt(e.target.value, 10) || 1))} />
               <button type="button" aria-label="Increase quantity" onClick={() => setQty((q) => clamp(q + 1))}>+</button>
             </div>
-            <button className="btn block" onClick={addToCart}>Add to cart</button>
+            <button
+              className={`btn block${added ? ' added' : ''}`}
+              aria-live="polite"
+              onClick={() => {
+                if (!addToCart()) return
+                setAdded(true)
+                clearTimeout(addedTimer.current)
+                addedTimer.current = setTimeout(() => setAdded(false), 1400)
+              }}
+            >
+              {added ? <><span aria-hidden="true">✓</span> Added!</> : 'Add to cart'}
+            </button>
           </div>
 
           <details open>

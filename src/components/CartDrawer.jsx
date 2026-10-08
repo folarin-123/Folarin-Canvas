@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { byId } from '../data/catalog.js'
 import { useShop } from '../context/ShopContext.jsx'
-import { ProductArt } from './Art.jsx'
+import ProductVisual from './ProductVisual.jsx'
 import Money from './Money.jsx'
 
 export default function CartDrawer() {
@@ -54,7 +54,7 @@ export default function CartDrawer() {
             const p = byId(item.id)
             return (
               <li className="crow" key={p.id + item.size}>
-                <div className="cthumb"><ProductArt product={p} decorative /></div>
+                <div className="cthumb"><ProductVisual product={p} decorative /></div>
                 <div>
                   <a className="ctitle" href={`#/product/${p.id}`} onClick={closeCart}>{p.title}</a>
                   <div className="cprice"><Money amount={p.price} currency={currency} />{item.size !== 'One size' && <> · {item.size}</>}</div>

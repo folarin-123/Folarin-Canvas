@@ -16,7 +16,7 @@ Open the address it prints (usually http://localhost:5173). Restart `npm run dev
 
 ## Deploy to Vercel
 
-Import this GitHub repository into Vercel. The included `vercel.json` configures Vite's production build (`npm run build`) and output directory (`dist`); Vercel also deploys the `api/` serverless functions. Add the required environment variables in the Vercel project settings before enabling server-mode checkout (see below). Local `.env` files are excluded from Git.
+Import this GitHub repository into Vercel. The included `vercel.json` configures Vite's production build (`npm run build`) and output directory (`dist`); Vercel also deploys the `api/` serverless functions. Set `VITE_USE_SERVER=true`, `VITE_PAYSTACK_PUBLIC_KEY`, and `PAYSTACK_SECRET_KEY` in Vercel project settings before deploying. Production checkout is deliberately disabled unless server-side initialization and verification are enabled. Local `.env` files are excluded from Git.
 
 ## Set up Paystack
 
@@ -27,16 +27,16 @@ Import this GitHub repository into Vercel. The included `vercel.json` configures
 
 Paystack charges Nigerian accounts in naira, so checkout is always in NGN even if a visitor browses in USD, GBP or EUR.
 
-### Before you take real money: use server mode
+### Production payments: server mode is required
 
-In browser mode the amount is sent from the visitor’s browser, which a technical person can edit. Server mode fixes that: the server works out the price from `src/data/catalog.js`, creates the transaction with your secret key, and confirms the payment afterwards.
+Browser mode sends the amount from the visitor’s browser, which can be edited. It is available only for local development and test-mode demos. Production checkout fails closed unless server mode is enabled: the server calculates prices from `src/data/catalog.js`, initializes the transaction with the secret key, and verifies the transaction amount and currency with Paystack before the order is confirmed.
 
 1. Deploy to Vercel (it picks up the `api/` folder automatically).
 2. In Vercel > Settings > Environment Variables add:
    - `PAYSTACK_SECRET_KEY` = your `sk_...` key (never put this in a `VITE_` variable or in the React code)
    - `VITE_PAYSTACK_PUBLIC_KEY` = your `pk_...` key
    - `VITE_USE_SERVER` = `true`
-3. Swap to your **live** keys only after a full test-mode order works.
+3. Set `VITE_USE_SERVER=true` in Vercel and redeploy. Swap to your **live** keys only after a full server-mode test order works.
 4. Recommended: in Paystack > Settings > API Keys & Webhooks, add a webhook URL for `charge.success` so orders are recorded even if a customer closes the tab after paying. (Not built yet; `api/verify.js` is the starting point.)
 
 To test server mode on your computer: `npx vercel dev` (needs a free Vercel account).
@@ -52,7 +52,7 @@ To test server mode on your computer: `npx vercel dev` (needs a free Vercel acco
 | About me text | `src/data/profile.js` and `src/pages/About.jsx` |
 | Site colours and spacing | top of `src/styles/index.css` |
 
-Product pictures are drawn in code (SVG) so the demo needs no photos. To use real photos, add an `image` field to each product and swap `<ProductArt>` for an `<img>` in `ProductCard.jsx`, `Product.jsx` and `CartDrawer.jsx`.
+Product pictures are drawn in code (SVG) so the demo needs no photos. To use real photos, add an `image` URL to a product in `src/data/catalog.js`; optionally add `detailImage` for a second product angle. `ProductVisual.jsx` uses the SVG artwork when no photo is provided, shows a loading skeleton while a photo loads, and falls back to the SVG if the photo fails. It is used by collection cards, product details, home collection tiles and the cart.
 
 ## Still to do
 

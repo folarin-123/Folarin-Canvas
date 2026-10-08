@@ -11,7 +11,7 @@ export const PUBLIC_KEY = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || ''
 export const SERVER_MODE = import.meta.env.VITE_USE_SERVER === 'true'
 const API = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
 
-export const paymentsReady = SERVER_MODE || PUBLIC_KEY.startsWith('pk_')
+export const paymentsReady = SERVER_MODE || (!import.meta.env.PROD && PUBLIC_KEY.startsWith('pk_'))
 export const isTestKey = PUBLIC_KEY.startsWith('pk_test_')
 
 const newReference = () => `FC-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`.toUpperCase()
@@ -30,6 +30,9 @@ async function post(path, body) {
 
 // order = { customer: { name, email, phone, address, city, state, note }, items: [{ id, size, qty }], priced }
 export async function startPayment(order, { onSuccess, onCancel, onError }) {
+  if (import.meta.env.PROD && !SERVER_MODE) {
+    throw new Error('Server-side payment verification must be enabled before checkout can accept payments.')
+  }
   const popup = new PaystackPop()
   const { customer, items, priced } = order
   const [firstName, ...rest] = customer.name.trim().split(/\s+/)
@@ -70,11 +73,7 @@ export async function startPayment(order, { onSuccess, onCancel, onError }) {
 
 // Server mode only: ask our server to confirm with Paystack that the money arrived and matches the cart.
 export async function verifyPayment(reference, order) {
-  if (!SERVER_MODE) return { ok: true, unverified: true }
-  try {
-    const data = await post('/api/verify', { reference, customer: order.customer, items: order.items })
-    return { ok: Boolean(data.ok) }
-  } catch {
-    return { ok: false }
-  }
+  if (!SERVER_MODE) return { ok: false, unverified: true }
+  const data = await post('/api/verify', { reference, customer: order.customer, items: order.items })
+  return { ok: Boolean(data.ok) }
 }

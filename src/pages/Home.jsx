@@ -1,7 +1,8 @@
 import { COLLECTIONS, FEATURED, byId } from '../data/catalog.js'
 import { BRAND } from '../data/site.js'
 import { useDocumentTitle } from '../hooks/useDocumentTitle.js'
-import { HeroArt, ProductArt } from '../components/Art.jsx'
+import { HeroArt } from '../components/Art.jsx'
+import ProductVisual from '../components/ProductVisual.jsx'
 import ProductCard from '../components/ProductCard.jsx'
 import Newsletter from '../components/Newsletter.jsx'
 
@@ -44,7 +45,7 @@ export default function Home() {
             const c = COLLECTIONS[handle]
             return (
               <a key={handle} className="tile" href={`#/collection/${handle}`}>
-                <span className="card-media"><ProductArt product={byId(c.pick)} view={1} decorative /></span>
+                <span className="card-media"><ProductVisual product={byId(c.pick)} view={1} decorative /></span>
                 <h3>{c.title}</h3>
                 <p>{c.blurb}</p>
               </a>
