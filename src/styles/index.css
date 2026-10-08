@@ -15,7 +15,7 @@
   --btn:#0f2d21; --btn-hover:#174432; --on-btn:#eef0e8;
   --stage-1:#1e4b38; --stage-2:#0a2016;
   --gutter:clamp(1rem,3vw,2.5rem);
-  --serif:"Bodoni Moda",Didot,"Bodoni 72",Georgia,serif;
+  --serif:"Bodoni Moda","Noto Sans Naira",Didot,"Bodoni 72",Georgia,serif;
   --sans:"Hanken Grotesk","Noto Sans Naira",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   color-scheme:light;
   box-sizing:border-box;
@@ -96,7 +96,7 @@ main:focus{outline:none}
 .pill-group{display:flex;gap:.35rem}
 .currency-pill{flex:1 1 0;min-width:0;min-height:44px;padding:.5rem .3rem;border:1px solid currentColor;border-radius:999px;background:transparent;color:inherit;font:500 .875rem/1 var(--sans);cursor:pointer}
 .currency-pill.selected{background:var(--accent);border-color:var(--accent);color:var(--bar)}
-.currency-pills>p{margin:.4rem 0 0;font-size:.65625rem;line-height:1.35;white-space:nowrap;opacity:.85}
+.currency-pills>p{margin:.5rem 0 0;font-size:.8125rem;line-height:1.4;opacity:.85;max-width:34ch}
 .footer-currency{margin-top:2rem}
 .footer-currency .currency-pills{max-width:22rem}
 .footer-currency .pill-group{max-width:20rem}
@@ -226,8 +226,6 @@ details p{margin:.75rem 0 0;color:var(--muted);max-width:50ch}
 .site-footer ul{list-style:none;margin:0;padding:0;display:grid;gap:.55rem}
 .site-footer a{text-decoration:none}
 .site-footer a:hover{text-decoration:underline;text-underline-offset:.3em}
-.site-footer a[href="#cookie-settings"]{font:inherit;color:inherit;background:none;border:0;padding:0;text-align:left;cursor:pointer;text-decoration:none}
-.site-footer a[href="#cookie-settings"]:hover{text-decoration:underline;text-underline-offset:.3em}
 .legal{margin-top:2.5rem;padding-top:1.25rem;border-top:1px solid rgba(238,240,232,.18);font-size:.875rem;opacity:.8}
 
 /* ---------- Cookie choices ---------- */
@@ -384,3 +382,8 @@ details p{margin:.75rem 0 0;color:var(--muted);max-width:50ch}
 .co-facts{margin:0;grid-template-columns:1fr 1fr}
 .back-cart{justify-self:center}
 .btn:disabled{opacity:.55;cursor:not-allowed}
+
+/* Button that looks like a text link (Cookie settings) */
+.link-button{font:inherit;color:inherit;background:none;border:0;padding:0;text-align:left;cursor:pointer;text-decoration:none}
+.link-button:hover{text-decoration:underline;text-underline-offset:.3em}
+.page .link-button{text-decoration:underline;text-underline-offset:.25em}

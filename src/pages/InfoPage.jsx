@@ -3,6 +3,7 @@ import { BRAND, EMAIL, SHIPPING } from '../data/site.js'
 import { validEmail } from '../utils/shade.js'
 import { useDocumentTitle } from '../hooks/useDocumentTitle.js'
 import Money from '../components/Money.jsx'
+import CookieSettingsButton from '../components/CookieSettingsButton.jsx'
 import NotFound from './NotFound.jsx'
 
 function ContactForm() {
@@ -121,7 +122,7 @@ const PAGES = {
         <p>When you open the Paystack payment popup, Paystack may use its own cookies or device data to process and protect your payment. Paystack controls those technologies; see Paystack’s privacy information for details.</p>
 
         <h2>Change or withdraw your choice</h2>
-        <p>Choose “Essential only” to decline optional uses, or “Accept all” to allow any optional categories we may add later. There are no analytics or advertising tools on the site now. Use <a href="#cookie-settings" onClick={(event) => { event.preventDefault(); window.dispatchEvent(new Event('fc:open-cookie-settings')) }}>Cookie settings</a> in the footer to reopen your choice. You can also clear this site’s local storage and cookies in your browser settings; essential cart and currency preferences will then be forgotten.</p>
+        <p>Choose “Essential only” to decline optional uses, or “Accept all” to allow any optional categories we may add later. There are no analytics or advertising tools on the site now. Use <CookieSettingsButton /> in the footer to reopen your choice. You can also clear this site’s local storage and cookies in your browser settings; essential cart and currency preferences will then be forgotten.</p>
       </>
     ),
   },

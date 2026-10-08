@@ -27,11 +27,16 @@ export default function CurrencySwitcher({ variant }) {
       setOpen(false)
       triggerRef.current?.focus()
     }
+    const closeOnFocusLeave = (event) => {
+      if (rootRef.current && !rootRef.current.contains(event.target)) setOpen(false)
+    }
     document.addEventListener('pointerdown', closeOutside)
     document.addEventListener('keydown', closeOnEscape)
+    document.addEventListener('focusin', closeOnFocusLeave)
     return () => {
       document.removeEventListener('pointerdown', closeOutside)
       document.removeEventListener('keydown', closeOnEscape)
+      document.removeEventListener('focusin', closeOnFocusLeave)
     }
   }, [open, variant])
 
@@ -67,6 +72,7 @@ export default function CurrencySwitcher({ variant }) {
               type="button"
               role="radio"
               aria-checked={currency === code}
+              tabIndex={currency === code ? 0 : -1}
               className={currency === code ? 'currency-pill selected' : 'currency-pill'}
               onClick={() => setCurrency(code)}
               onKeyDown={(event) => moveFocus(event, index)}

@@ -16,6 +16,6 @@ export const PROFILE = {
   bio: 'I’m a Nigerian fashion designer with a background in Physics. I bring a curious, precise eye to creating pieces that celebrate Nigerian fabrics and craft.',
   cvLink: {
     label: 'View my CV',
-    href: '/Folarin Peace Omowunmi cv.pdf',
+    href: '/FOLARIN%20PEACE%20OMOWUNMI%20CV%202026.pdf',
   },
 }
