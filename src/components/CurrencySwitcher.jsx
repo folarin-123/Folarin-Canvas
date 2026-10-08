@@ -81,7 +81,6 @@ export default function CurrencySwitcher({ variant }) {
             </button>
           ))}
         </div>
-        <p>Prices in other currencies are a guide. You pay in naira (₦).</p>
       </section>
     )
   }

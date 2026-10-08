@@ -58,7 +58,6 @@ export default function App() {
       >
         Skip to content
       </a>
-      <div className="announce">Demo store. Made to order, delivered across all Nigerian states.</div>
       <Header routeKey={route.key} />
       <main id="main" tabIndex={-1} ref={mainRef}>
         <Page route={route} />

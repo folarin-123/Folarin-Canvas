@@ -55,9 +55,6 @@ export default function Product({ id }) {
         <div className="pdp-info">
           <h1>{p.title}</h1>
           <p className="price big"><Money amount={p.price} currency={currency} /></p>
-          <p className="currency-note" aria-hidden={currency === 'NGN'}>
-            {currency === 'NGN' ? '\u00a0' : `Shown in ${currency}. You pay in naira at checkout.`}
-          </p>
           <p>{p.blurb}</p>
 
           {family.length > 1 && (

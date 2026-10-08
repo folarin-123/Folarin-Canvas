@@ -39,7 +39,7 @@ export default function Footer() {
       <div className="wrap footer-currency">
         <CurrencySwitcher variant="pills" />
       </div>
-      <div className="wrap legal">&copy; {year} {BRAND}. Payments by Paystack. Prices in other currencies are indicative.</div>
+      <div className="wrap legal">&copy; {year} {BRAND}. Payments by Paystack.</div>
     </footer>
   )
 }
