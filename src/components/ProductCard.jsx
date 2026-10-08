@@ -30,7 +30,7 @@ export default function ProductCard({ product: p }) {
         <span className="price"><Money amount={p.price} currency={currency} /></span>
       </div>
       {needsSize(p) ? (
-        <a className="btn btn-line block" href={`#/product/${p.id}`}>Choose size</a>
+        <a className="btn btn-line block" href={`#/product/${p.id}`}>Shop</a>
       ) : (
         <button className={`btn btn-line block${added ? ' added' : ''}`} onClick={addToCart} aria-live="polite">
           {added ? <><span aria-hidden="true">✓</span> Added!</> : 'Add to cart'}
