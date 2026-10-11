@@ -32,7 +32,7 @@ export default function Home() {
         <div className="wrap hero-in">
           <div className="hero-copy">
             <h1 id="hero-title" aria-label="Cut for the way we dress">
-              {'Cut for the way we dress'.split(' ').map((word, index) => <span className="hero-word" style={{ '--i': index }} key={word} aria-hidden="true">{word} </span>)}
+              {'Cut for the way we dress'.split(' ').map((word, index) => <span className="hero-word" style={{ '--i': index }} key={word} aria-hidden="true">{word}</span>)}
             </h1>
             <p>Trousers, skirts, kaftans and traditional sets in Ankara, adire and aso-oke, made to your measurements.</p>
             <div className="hero-actions">

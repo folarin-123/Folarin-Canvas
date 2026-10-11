@@ -141,16 +141,18 @@ main:focus{outline:none}
 .hero::before,.hero::after{content:"";position:absolute;z-index:0;width:clamp(12rem,24vw,24rem);aspect-ratio:1;border-radius:50%;pointer-events:none;filter:blur(42px);opacity:.12;animation:orb-drift 22s ease-in-out infinite alternate}
 .hero::before{top:8%;right:4%;background:var(--accent)}
 .hero::after{right:38%;bottom:-35%;background:#25d366;animation-delay:-9s}
-.hero-in{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);align-items:center;gap:1rem;min-height:min(82vh,47.5rem)}
-.hero-copy{padding-block:3rem;max-width:29rem}
+.hero-in{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);align-items:center;column-gap:clamp(2rem,5vw,5rem);min-height:min(82vh,47.5rem)}
+.hero-copy{padding-block:3rem;max-width:32rem}
 .hero h1{font-size:clamp(2.4rem,5.6vw,4.9rem);line-height:1}
 .hero p{margin:1.25rem 0 2rem;font-size:1.125rem;max-width:26rem;color:rgba(238,240,232,.86)}
+.hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem}
+.hero-actions .btn,.hero-actions .btn-line{min-height:3rem;padding:.8rem 1.25rem}
 .hero-art svg{display:block;width:100%;height:auto;animation:hero-float 7.5s ease-in-out infinite alternate}
-.hero-word{display:inline-block;opacity:0;animation:word-reveal .45s var(--ease-out) calc(var(--i) * 60ms) both}
+.hero-word{display:inline-block;margin-inline-end:.2em;opacity:0;animation:word-reveal .45s var(--ease-out) calc(var(--i) * 60ms) both}
 @media (max-width:859px){
   .hero-in{grid-template-columns:1fr;min-height:0;gap:0}
   .hero-art{order:-1;padding-top:1.5rem}
-  .hero-copy{padding-block:.5rem 2.75rem}
+  .hero-copy{padding-block:1.25rem 2.75rem}
 }
 .strip{background:var(--surface);border-block:1px solid var(--line);text-align:center;padding:1rem;font-size:.9375rem}
 .strip a{margin-left:.9rem;text-underline-offset:.3em}
@@ -225,7 +227,11 @@ main:focus{outline:none}
 .swatches{display:flex;gap:.65rem;margin:1.25rem 0}
 .sw{width:1.9rem;height:1.9rem;border-radius:50%;background:var(--c);border:2px solid var(--paper);outline:1px solid var(--line);display:block}
 .sw.on{outline:2px solid var(--ink)}
-.buy{display:flex;gap:.75rem;margin:1.5rem 0 2rem}
+.buy{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(10rem,1.45fr);align-items:stretch;gap:.75rem;margin:1.5rem 0 2rem}
+.buy .ask-whatsapp,.buy>.btn{min-width:0;min-height:3.25rem;padding:.75rem 1rem;white-space:nowrap}
+.buy .ask-whatsapp{font-size:.9rem}
+.buy>.btn{font-size:.9375rem}
+.buy>.qty{align-self:center}
 .qty{display:inline-flex;align-items:center;border:1px solid var(--line);background:var(--surface);border-radius:var(--r-pill);overflow:hidden}
 .qty button{width:2.5rem;height:2.75rem;background:none;border:0;color:inherit;font-size:1.1rem;cursor:pointer}
 .qty input{width:3rem;text-align:center;border:0;background:transparent;color:inherit;font:inherit;-moz-appearance:textfield}
@@ -359,8 +365,9 @@ details p{margin:.75rem 0 0;color:var(--muted);max-width:50ch}
 @media (max-width:420px){
   .cart-btn .lbl{display:none}
   .pay-button{font-size:.8125rem}
-  .buy{flex-wrap:wrap}
-  .buy .btn{flex:1 1 100%}
+  .buy{grid-template-columns:auto minmax(0,1fr)}
+  .buy>.btn{grid-column:1/-1}
+  .buy .ask-whatsapp,.buy>.btn{padding-inline:.8rem}
 }
 @media (max-width:359px){
   .hdr{padding-left:max(.75rem,env(safe-area-inset-left,0px));padding-right:max(.75rem,env(safe-area-inset-right,0px))}
