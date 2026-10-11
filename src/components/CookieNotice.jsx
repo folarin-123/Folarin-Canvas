@@ -28,7 +28,7 @@ export default function CookieNotice() {
   return (
     <section className="cookie-notice" role="region" aria-label="Cookie and storage choices">
       <div className="cookie-copy">
-        <p>We use essential browser storage for your cart and currency. Paystack may use its own cookies when you pay. There are no analytics or advertising cookies.</p>
+        <p>We use essential browser storage for your cart and currency. There are no analytics or advertising cookies.</p>
         <a href="#/page/cookie-policy">Cookie policy</a>
         {error && <p className="cookie-error" role="status" aria-live="polite">{error}</p>}
       </div>

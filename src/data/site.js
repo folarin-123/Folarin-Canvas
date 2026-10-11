@@ -1,6 +1,10 @@
 // Site-wide settings. Change the brand name, social links or delivery fees here.
 export const BRAND = 'Folarin’s Canvas'
 export const EMAIL = 'peaceofolarin@gmail.com'
+export const WHATSAPP = { number: '2349068887199', display: '0906 888 7199' }
+export const PAYMENT_NOTE = 'After you send your order, we will confirm availability, your final delivery fee and how to pay, right here on WhatsApp.'
+export const LEAD_TIME_TEXT = '7 to 10 working days'
+export const DELIVERY_COVERAGE_TEXT = 'all Nigerian states'
 
 // Tracking parameters (?s=11, utm_*, stkn=...) were removed from the shared links.
 export const SOCIALS = [
@@ -10,7 +14,6 @@ export const SOCIALS = [
 ]
 
 // Delivery fees in naira. Orders at or above `freeOver` ship free.
-// The server (api/*.js) reads these too, so the amount charged can never be set by the browser.
 export const SHIPPING = { lagos: 3500, other: 6500, freeOver: 150000 }
 
 export const NIGERIAN_STATES = [

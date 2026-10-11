@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { COLLECTIONS, PRODUCTS } from '../data/catalog.js'
+import { CATEGORIES, COLLECTIONS, PRODUCTS } from '../data/catalog.js'
 import { BRAND } from '../data/site.js'
 import { useDocumentTitle } from '../hooks/useDocumentTitle.js'
 import ProductCard from '../components/ProductCard.jsx'
 import Newsletter from '../components/Newsletter.jsx'
 import NotFound from './NotFound.jsx'
+import { useReveal } from '../hooks/useReveal.js'
 
 const SORTS = [
   ['featured', 'Featured'],
@@ -15,6 +16,8 @@ const SORTS = [
 export default function Collection({ handle }) {
   const collection = COLLECTIONS[handle]
   const [sort, setSort] = useState('featured')
+  const headingRef = useReveal()
+  const toolbarRef = useReveal()
   useDocumentTitle(`${collection ? collection.title : 'Not found'} | ${BRAND}`)
   if (!collection) return <NotFound />
 
@@ -24,12 +27,18 @@ export default function Collection({ handle }) {
 
   return (
     <>
-      <section className="wrap page-head">
+      <section className="wrap page-head reveal" ref={headingRef}>
         <h1>{collection.title}</h1>
         <p>{collection.blurb}</p>
       </section>
-      <div className="wrap toolbar">
-        <span>{items.length} products</span>
+      <nav className="wrap category-chips" aria-label="Shop categories">
+        <a href="#/collection/all-products" aria-current={handle === 'all-products' ? 'page' : undefined}>All</a>
+        {CATEGORIES.map(({ handle: category, label }) => (
+          <a key={category} href={`#/collection/${category}`} aria-current={handle === category ? 'page' : undefined}>{label}</a>
+        ))}
+      </nav>
+      <div className="wrap toolbar reveal" ref={toolbarRef}>
+        <span>{items.length} {items.length === 1 ? 'product' : 'products'}</span>
         <label>
           Sort
           <select value={sort} onChange={(e) => setSort(e.target.value)}>
@@ -41,6 +50,7 @@ export default function Collection({ handle }) {
         <div className="grid">
           {items.map((p) => <ProductCard key={p.id} product={p} />)}
         </div>
+        {items.length === 0 && <div className="empty-state"><h2>No pieces in this collection yet</h2><p>Try another category or browse everything we make.</p><a className="btn" href="#/collection/all-products">Shop all</a></div>}
       </div>
       <Newsletter />
     </>

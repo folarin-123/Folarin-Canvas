@@ -1,35 +1,47 @@
 import { useState } from 'react'
-import { BRAND, EMAIL, SHIPPING } from '../data/site.js'
-import { validEmail } from '../utils/shade.js'
+import { BRAND, EMAIL, SHIPPING, WHATSAPP, LEAD_TIME_TEXT } from '../data/site.js'
+import { validEmail } from '../utils/validators.js'
+import { whatsappLink } from '../utils/whatsapp.js'
 import { useDocumentTitle } from '../hooks/useDocumentTitle.js'
 import Money from '../components/Money.jsx'
 import CookieSettingsButton from '../components/CookieSettingsButton.jsx'
+import { WhatsAppIcon } from '../components/Icons.jsx'
 import NotFound from './NotFound.jsx'
 
 function ContactForm() {
   const [message, setMessage] = useState('')
+  const [whatsappHref, setWhatsappHref] = useState('')
   function onSubmit(e) {
     e.preventDefault()
     const form = e.currentTarget
     const data = new FormData(form)
-    const ok = validEmail(String(data.get('email') || '').trim()) && String(data.get('name') || '').trim() && String(data.get('message') || '').trim()
-    setMessage(ok ? 'Thanks, your message is ready to send. (Demo: connect this form to your inbox.)' : 'Fill in your name, a valid email and a message.')
-    if (ok) form.reset()
+    const name = String(data.get('name') || '').trim()
+    const email = String(data.get('email') || '').trim()
+    const text = String(data.get('message') || '').trim()
+    const ok = validEmail(email) && name && text
+    if (!ok) {
+      setMessage('Fill in your name, a valid email and a message.')
+      setWhatsappHref('')
+      return
+    }
+    const href = whatsappLink(`Hello Folarin’s Canvas, my name is ${name}.\n\n${text}\n\nYou can reply to me at ${email}.`)
+    setWhatsappHref(href)
+    setMessage('Opening WhatsApp with your message. If it does not open, use the link below.')
+    window.open(href, '_blank', 'noopener,noreferrer')
   }
   return (
     <form onSubmit={onSubmit} noValidate>
       <div className="field"><label htmlFor="c-name">Name</label><input id="c-name" name="name" autoComplete="name" required /></div>
       <div className="field"><label htmlFor="c-email">Email</label><input id="c-email" name="email" type="email" autoComplete="email" required /></div>
       <div className="field"><label htmlFor="c-msg">Message</label><textarea id="c-msg" name="message" rows="5" required /></div>
-      <button className="btn" type="submit">Send message</button>
+      <button className="btn" type="submit"><WhatsAppIcon /> Send message on WhatsApp</button>
+      <p className="note">Prefer email? <a href={`mailto:${EMAIL}`}>{EMAIL}</a> · WhatsApp: {WHATSAPP.display}</p>
+      {whatsappHref && <p><a className="btn-line" href={whatsappHref} target="_blank" rel="noopener noreferrer"><WhatsAppIcon /> Open WhatsApp message</a></p>}
       <p className="form-msg note" role="status" aria-live="polite">{message}</p>
     </form>
   )
 }
 
-const note = (what) => <p className="note">Placeholder text. Replace it with your own {what} before launch.</p>
-
-// TODO: Have these policies reviewed by a Nigerian lawyer before launch.
 const PAGES = {
   contact: { title: 'Get in touch', body: () => (<><p>Questions about an order or a product? Send a message.</p><ContactForm /></>) },
   'shipping-and-returns': {
@@ -37,10 +49,9 @@ const PAGES = {
     body: () => (
       <>
         <h2>Delivery</h2>
-        <p>Every piece is made to order and ships within 7 to 10 working days. Delivery is <Money amount={SHIPPING.lagos} currency="NGN" /> in Lagos and <Money amount={SHIPPING.other} currency="NGN" /> to other states, and free on orders of <Money amount={SHIPPING.freeOver} currency="NGN" /> or more.</p>
+        <p>Every piece is made to order and ships within {LEAD_TIME_TEXT}. Delivery is <Money amount={SHIPPING.lagos} currency="NGN" /> in Lagos and <Money amount={SHIPPING.other} currency="NGN" /> to other states, and free on orders of <Money amount={SHIPPING.freeOver} currency="NGN" /> or more. Your final delivery fee is confirmed with you on WhatsApp before payment.</p>
         <h2>Returns and remakes</h2>
-        <p>Because pieces are cut to your measurements, we cannot take back items made to your size unless they are faulty or not as ordered. If that happens, tell us within 7 days of delivery and we will remake or refund.</p>
-        {note('policy')}
+        <p>If an item is faulty or differs from what you ordered, contact us within 7 days of delivery so we can arrange a remake or another appropriate resolution.</p>
       </>
     ),
   },
@@ -49,7 +60,7 @@ const PAGES = {
     body: () => (
       <>
         <p>Every piece is checked by hand before it leaves us. If something is wrong when it arrives, tell us and we will put it right.</p>
-        {note('promise')}
+        <p>We make each order with care, confirm details with you before production, and stay available to help with delivery or fit questions.</p>
       </>
     ),
   },
@@ -57,16 +68,16 @@ const PAGES = {
     title: 'Privacy policy',
     body: () => (
       <>
-        <p>Last updated: 8 October 2026</p>
+        <p>Last updated: 10 October 2026</p>
         <h2>Who we are</h2>
         <p>Folarin’s Canvas is a Nigerian fashion label run by Folarin Peace Omowunmi. We handle your personal information in line with the Nigeria Data Protection Act 2023 (NDPA). Contact us at <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.</p>
 
         <h2>What we collect and why</h2>
         <ul>
-          <li><strong>Orders:</strong> your name, email, phone number, delivery address, order and payment details so we can take payment, make your order, deliver it and help with questions.</li>
+          <li><strong>Orders:</strong> your name, email if provided, phone number, delivery address, order details and measurements you choose to send, so we can confirm, make and deliver your order. You choose what to share with us through WhatsApp.</li>
           <li><strong>Measurements:</strong> any body measurements or notes you choose to provide, so we can make your garment to size.</li>
-          <li><strong>Contact messages:</strong> your name, email and message so we can reply.</li>
-          <li><strong>Mailing list:</strong> your email address to send updates if you sign up.</li>
+          <li><strong>Contact messages:</strong> your name, email and message so we can reply in WhatsApp or by email.</li>
+          <li><strong>WhatsApp updates:</strong> your WhatsApp contact and request for updates, if you ask us to include you.</li>
           <li><strong>Browser storage:</strong> cart contents and your chosen currency are stored locally on your device to keep the shop working as you expect.</li>
         </ul>
 
@@ -74,7 +85,7 @@ const PAGES = {
         <p>We process order and delivery details to perform our contract with you. We use consent for mailing-list messages and any optional future analytics or advertising. We may rely on legitimate interests to answer enquiries, protect the shop and improve its services, while respecting your rights.</p>
 
         <h2>Who we share information with</h2>
-        <p>We share only what is needed with Paystack to process payments, delivery partners to fulfil orders, and Vercel, our hosting provider, to run the site. Paystack processes your card details; we do not receive or store your full card number. These providers may process information on our behalf under their own security and privacy practices.</p>
+        <p>Order details you choose to send are shared with the business through WhatsApp, a Meta service with its own privacy practices. Payment is arranged directly with the seller. Vercel hosts this website and may process technical information needed to provide that service. We share delivery details with delivery partners when needed to fulfil an order.</p>
 
         <h2>How long we keep it</h2>
         <p>We keep order and payment records only as long as needed to fulfil orders, handle support and meet legal or accounting obligations. We keep contact messages until the enquiry is resolved and for a reasonable follow-up period. Mailing-list details remain until you unsubscribe or withdraw consent. Measurements are kept only while needed to make and support your order, then deleted when no longer necessary.</p>
@@ -100,7 +111,7 @@ const PAGES = {
     title: 'Cookie policy',
     body: () => (
       <>
-        <p>Last updated: 8 October 2026</p>
+        <p>Last updated: 10 October 2026</p>
         <p>Cookies are small files a website or service can store in your browser. Local storage is browser storage that keeps information on your device between visits. We use local storage for essential shop features. We do not currently use analytics or advertising.</p>
 
         <h2>What this site uses</h2>
@@ -113,13 +124,14 @@ const PAGES = {
               <tr><td><code>fc:cart</code></td><td>Remembers cart items.</td><td>Until browser storage is cleared.</td><td>Yes</td></tr>
               <tr><td><code>fc:currency</code></td><td>Remembers your chosen display currency.</td><td>Until browser storage is cleared.</td><td>Yes</td></tr>
               <tr><td><code>fc:consent</code></td><td>Remembers your cookie choice, version and choice date.</td><td>Until you change it or clear browser storage.</td><td>Yes</td></tr>
-              <tr><td>Paystack cookies and device data</td><td>Payment processing and security in the Paystack payment popup.</td><td>Set by Paystack.</td><td>Used when you choose to pay.</td></tr>
+              <tr><td>fc:pending-order</td><td>Keeps an order message available so you can resend it after a refresh.</td><td>Until you mark the order as sent or clear browser storage.</td><td>Yes</td></tr>
+              <tr><td><code>fc:profile</code></td><td>Remembers your name, phone and delivery details to speed up future orders. You can forget these details in checkout.</td><td>Until you forget them or clear browser storage.</td><td>Yes</td></tr>
             </tbody>
           </table>
         </div>
 
         <h2>Third parties</h2>
-        <p>When you open the Paystack payment popup, Paystack may use its own cookies or device data to process and protect your payment. Paystack controls those technologies; see Paystack’s privacy information for details.</p>
+        <p>If you choose to open WhatsApp, order details you send are processed by Meta under WhatsApp’s own privacy practices. Payment is arranged directly with the seller; this website does not collect payment card data.</p>
 
         <h2>Change or withdraw your choice</h2>
         <p>Choose “Essential only” to decline optional uses, or “Accept all” to allow any optional categories we may add later. There are no analytics or advertising tools on the site now. Use <CookieSettingsButton /> in the footer to reopen your choice. You can also clear this site’s local storage and cookies in your browser settings; essential cart and currency preferences will then be forgotten.</p>

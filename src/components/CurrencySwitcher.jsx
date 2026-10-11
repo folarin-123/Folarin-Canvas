@@ -133,6 +133,7 @@ export default function CurrencySwitcher({ variant }) {
               {currency === code && <span aria-hidden="true">✓</span>}
             </button>
           ))}
+          <p className="currency-menu-note">Checkout is in naira (₦). Other prices are approximate.</p>
         </div>
       )}
     </div>

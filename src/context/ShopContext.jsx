@@ -4,6 +4,8 @@ import { CURRENCIES, byId, sizesFor } from '../data/catalog.js'
 const ShopContext = createContext(null)
 const KEY_CURRENCY = 'fc:currency'
 const KEY_CART = 'fc:cart'
+const KEY_PENDING_ORDER = 'fc:pending-order'
+const KEY_PROFILE = 'fc:profile'
 
 function readStorage(key, fallback) {
   try {
@@ -16,9 +18,16 @@ function readStorage(key, fallback) {
 function writeStorage(key, value) {
   try {
     localStorage.setItem(key, JSON.stringify(value))
+    return true
   } catch {
-    /* storage can be blocked; the shop still works without it */
+    return false
   }
+}
+
+function initProfile() {
+  const saved = readStorage(KEY_PROFILE, null)
+  if (!saved || typeof saved !== 'object' || Array.isArray(saved)) return null
+  return Object.fromEntries(['name', 'phone', 'address', 'city', 'state'].map((key) => [key, typeof saved[key] === 'string' ? saved[key] : '']))
 }
 
 // A cart line is one product in one size: { id, size, qty }.
@@ -37,6 +46,17 @@ function cartReducer(cart, action) {
         .filter((i) => i.qty > 0)
     case 'remove':
       return cart.filter((i) => !same(i, action.id, action.size))
+    case 'change-size': {
+      const source = cart.find((i) => same(i, action.id, action.size))
+      if (!source || source.size === action.newSize) return cart
+      const target = cart.find((i) => same(i, action.id, action.newSize))
+      if (target) {
+        return cart
+          .filter((i) => !same(i, action.id, action.size))
+          .map((i) => same(i, action.id, action.newSize) ? { ...i, qty: Math.min(99, i.qty + source.qty) } : i)
+      }
+      return cart.map((i) => same(i, action.id, action.size) ? { ...i, size: action.newSize } : i)
+    }
     case 'clear':
       return []
     default:
@@ -62,13 +82,19 @@ export function ShopProvider({ children }) {
     return CURRENCIES[saved] ? saved : 'NGN'
   })
   const [cart, dispatch] = useReducer(cartReducer, undefined, initCart)
+  const [pendingOrder, setPendingOrder] = useState(() => readStorage(KEY_PENDING_ORDER, null))
+  const [profile, setProfile] = useState(initProfile)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [checkoutOpen, setCheckoutOpen] = useState(false)
   const [toast, setToast] = useState('')
   const toastTimer = useRef(0)
 
-  useEffect(() => writeStorage(KEY_CURRENCY, currency), [currency])
-  useEffect(() => writeStorage(KEY_CART, cart), [cart])
+  useEffect(() => {
+    writeStorage(KEY_CURRENCY, currency)
+  }, [currency])
+  useEffect(() => {
+    writeStorage(KEY_CART, cart)
+  }, [cart])
   useEffect(() => () => clearTimeout(toastTimer.current), [])
 
   const money = useCallback((ngn) => formatMoney(ngn, currency), [currency])
@@ -77,13 +103,53 @@ export function ShopProvider({ children }) {
     clearTimeout(toastTimer.current)
     toastTimer.current = setTimeout(() => setToast(''), 5200)
   }, [])
+  const saveProfile = useCallback((details) => {
+    const nextProfile = Object.fromEntries(['name', 'phone', 'address', 'city', 'state'].map((key) => [key, String(details[key] || '').trim()]))
+    if (!writeStorage(KEY_PROFILE, nextProfile)) return false
+    setProfile(nextProfile)
+    return true
+  }, [])
+  const clearProfile = useCallback(() => {
+    try {
+      localStorage.removeItem(KEY_PROFILE)
+    } catch {
+      return false
+    }
+    setProfile(null)
+    return true
+  }, [])
   const add = useCallback((id, size, qty = 1) => {
     dispatch({ type: 'add', id, size, qty })
     setDrawerOpen(true)
   }, [])
   const step = useCallback((id, size, delta) => dispatch({ type: 'step', id, size, delta }), [])
   const remove = useCallback((id, size) => dispatch({ type: 'remove', id, size }), [])
+  const changeSize = useCallback((id, size, newSize) => {
+    const product = byId(id)
+    if (!product || !sizesFor(product).includes(newSize)) return
+    const source = cart.find((item) => same(item, id, size))
+    const target = cart.find((item) => same(item, id, newSize))
+    if (source && target && source.qty + target.qty > 99) {
+      showToast('That size would exceed the 99-piece limit. Reduce a quantity first.')
+      return
+    }
+    dispatch({ type: 'change-size', id, size, newSize })
+  }, [cart, showToast])
   const clearCart = useCallback(() => dispatch({ type: 'clear' }), [])
+  const savePendingOrder = useCallback((order) => {
+    if (!writeStorage(KEY_PENDING_ORDER, order)) return false
+    setPendingOrder(order)
+    return true
+  }, [])
+  const clearPendingOrder = useCallback(() => {
+    try {
+      localStorage.removeItem(KEY_PENDING_ORDER)
+    } catch {
+      return false
+    }
+    setPendingOrder(null)
+    return true
+  }, [])
   const openCart = useCallback(() => setDrawerOpen(true), [])
   const closeCart = useCallback(() => setDrawerOpen(false), [])
   const openCheckout = useCallback(() => {
@@ -97,10 +163,10 @@ export function ShopProvider({ children }) {
 
   const value = useMemo(
     () => ({
-      currency, setCurrency, money, cart, count, subtotal, add, step, remove, clearCart,
+      currency, setCurrency, money, cart, count, subtotal, add, step, remove, changeSize, clearCart, pendingOrder, savePendingOrder, clearPendingOrder, profile, saveProfile, clearProfile,
       drawerOpen, openCart, closeCart, checkoutOpen, openCheckout, closeCheckout, toast, showToast,
     }),
-    [currency, money, cart, count, subtotal, add, step, remove, clearCart, drawerOpen, openCart, closeCart, checkoutOpen, openCheckout, closeCheckout, toast, showToast],
+    [currency, money, cart, count, subtotal, add, step, remove, changeSize, clearCart, pendingOrder, savePendingOrder, clearPendingOrder, profile, saveProfile, clearProfile, drawerOpen, openCart, closeCart, checkoutOpen, openCheckout, closeCheckout, toast, showToast],
   )
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>
 }

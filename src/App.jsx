@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { Suspense, lazy, useEffect, useRef } from 'react'
 import { ShopProvider } from './context/ShopContext.jsx'
 import { useHashRoute } from './hooks/useHashRoute.js'
 import Header from './components/Header.jsx'
@@ -7,12 +7,14 @@ import CartDrawer from './components/CartDrawer.jsx'
 import Toast from './components/Toast.jsx'
 import Checkout from './components/Checkout.jsx'
 import CookieNotice from './components/CookieNotice.jsx'
-import Home from './pages/Home.jsx'
-import Collection from './pages/Collection.jsx'
-import Product from './pages/Product.jsx'
-import About from './pages/About.jsx'
-import InfoPage from './pages/InfoPage.jsx'
-import NotFound from './pages/NotFound.jsx'
+import FloatingWhatsApp from './components/FloatingWhatsApp.jsx'
+
+const Home = lazy(() => import('./pages/Home.jsx'))
+const Collection = lazy(() => import('./pages/Collection.jsx'))
+const Product = lazy(() => import('./pages/Product.jsx'))
+const About = lazy(() => import('./pages/About.jsx'))
+const InfoPage = lazy(() => import('./pages/InfoPage.jsx'))
+const NotFound = lazy(() => import('./pages/NotFound.jsx'))
 
 function Page({ route }) {
   switch (route.name) {
@@ -61,7 +63,9 @@ export default function App() {
       <Header routeKey={route.key} />
       <main id="main" tabIndex={-1} ref={mainRef}>
         <div key={route.key} className="route-enter">
-          <Page route={route} />
+          <Suspense fallback={<div className="route-loading" role="status">Loading page…</div>}>
+            <Page route={route} />
+          </Suspense>
         </div>
       </main>
       <Footer />
@@ -69,6 +73,7 @@ export default function App() {
       <Checkout />
       <Toast />
       <CookieNotice />
+      <FloatingWhatsApp />
     </ShopProvider>
   )
 }

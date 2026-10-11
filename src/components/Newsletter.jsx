@@ -1,31 +1,16 @@
-import { useState } from 'react'
-import { validEmail } from '../utils/shade.js'
+import { BRAND } from '../data/site.js'
+import { whatsappLink } from '../utils/whatsapp.js'
+import { WhatsAppIcon } from './Icons.jsx'
 
 export default function Newsletter() {
-  const [email, setEmail] = useState('')
-  const [message, setMessage] = useState('')
-
-  function onSubmit(e) {
-    e.preventDefault()
-    if (validEmail(email.trim())) {
-      setMessage('Thanks, you are on the list. (Demo: connect this form to your email provider.)')
-      setEmail('')
-    } else {
-      setMessage('Enter a valid email address, for example name@example.com.')
-    }
-  }
-
   return (
     <section className="news" aria-labelledby="news-title">
       <div className="wrap">
-        <h2 id="news-title">Mailing list</h2>
-        <p>Early access to new fabrics, restocks and offers.</p>
-        <form className="news-form" onSubmit={onSubmit} noValidate>
-          <label className="sr" htmlFor="news-email">Email</label>
-          <input id="news-email" type="email" placeholder="Email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          <button className="btn" type="submit">Subscribe</button>
-        </form>
-        <p className="form-msg" role="status" aria-live="polite">{message}</p>
+        <h2 id="news-title">Order updates and new fabrics on WhatsApp</h2>
+        <p>Ask to hear about new fabrics, restocks and offers.</p>
+        <a className="btn" href={whatsappLink(`Hello ${BRAND}, please add me to your updates list.`)} target="_blank" rel="noopener noreferrer">
+          <WhatsAppIcon /> Message us on WhatsApp
+        </a>
       </div>
     </section>
   )

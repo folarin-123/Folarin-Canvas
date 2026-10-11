@@ -1,29 +1,28 @@
 import { useEffect, useRef, useState } from 'react'
+import { CATEGORIES } from '../data/catalog.js'
 import { BRAND } from '../data/site.js'
 import { useShop } from '../context/ShopContext.jsx'
 import CurrencySwitcher from './CurrencySwitcher.jsx'
 
-const SHOP_LINKS = [
-  ['sets', 'Complete outfits'],
-  ['trousers', 'Trousers'],
-  ['skirts', 'Skirts'],
-  ['tops', 'Tops and kaftans'],
-  ['accessories', 'Caps and gele'],
-  ['all-products', 'Shop all'],
-]
-
 export default function Header({ routeKey }) {
   const { count, openCart } = useShop()
   const [navOpen, setNavOpen] = useState(false)
-  const [shopOpen, setShopOpen] = useState(false)
+  const [compact, setCompact] = useState(false)
   const [cartBumped, setCartBumped] = useState(false)
-  const shopRef = useRef(null)
+  const sentinelRef = useRef(null)
   const menuButtonRef = useRef(null)
   const mobileNavRef = useRef(null)
   const currentRouteKey = useRef(routeKey)
   const previousCount = useRef(count)
   const bumpTimer = useRef(0)
   currentRouteKey.current = routeKey
+
+  useEffect(() => {
+    if (!sentinelRef.current || typeof IntersectionObserver === 'undefined') return undefined
+    const observer = new IntersectionObserver(([entry]) => setCompact(!entry.isIntersecting), { rootMargin: '-24px 0px 0px 0px' })
+    observer.observe(sentinelRef.current)
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     if (count <= previousCount.current) {
@@ -44,7 +43,6 @@ export default function Header({ routeKey }) {
   // Close the menus whenever the page changes.
   useEffect(() => {
     setNavOpen(false)
-    setShopOpen(false)
   }, [routeKey])
 
   useEffect(() => {
@@ -106,25 +104,12 @@ export default function Header({ routeKey }) {
     }
   }, [navOpen])
 
-  // Close the Shop dropdown on an outside click or Escape.
-  useEffect(() => {
-    if (!shopOpen) return undefined
-    const onClick = (e) => {
-      if (shopRef.current && !shopRef.current.contains(e.target)) setShopOpen(false)
-    }
-    const onKey = (e) => {
-      if (e.key === 'Escape') setShopOpen(false)
-    }
-    document.addEventListener('click', onClick)
-    document.addEventListener('keydown', onKey)
-    return () => {
-      document.removeEventListener('click', onClick)
-      document.removeEventListener('keydown', onKey)
-    }
-  }, [shopOpen])
+  const shopActive = routeKey.startsWith('collection/') || routeKey.startsWith('product/')
 
   return (
-    <header className="site-header">
+    <>
+    <span className="header-sentinel" ref={sentinelRef} aria-hidden="true" />
+    <header className={`site-header${compact ? ' compact' : ''}`}>
       <div className="hdr">
         <div className="left">
           <button ref={menuButtonRef} className="menu-btn" aria-expanded={navOpen} aria-controls="mobile-nav" aria-label={navOpen ? 'Close menu' : 'Open menu'} onClick={() => setNavOpen((o) => !o)}>
@@ -133,21 +118,10 @@ export default function Header({ routeKey }) {
             </svg>
           </button>
           <nav className="nav" aria-label="Main">
-            <a href="#/">Home</a>
-            <div className={'has-menu' + (shopOpen ? ' open' : '')} ref={shopRef}>
-              <button className="nav-link" aria-haspopup="true" aria-expanded={shopOpen} onClick={() => setShopOpen((o) => !o)}>
-                Shop
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true">
-                  <path d="M1 3l4 4 4-4" />
-                </svg>
-              </button>
-              <div className="menu">
-                {SHOP_LINKS.map(([handle, label]) => (
-                  <a key={handle} href={`#/collection/${handle}`}>{label}</a>
-                ))}
-              </div>
-            </div>
-            <a href="#/about">About me</a>
+            <a href="#/" aria-current={routeKey === '' ? 'page' : undefined}>Home</a>
+            <a href="#/collection/all-products" aria-current={shopActive ? 'page' : undefined}>Shop</a>
+            <a href="#/about" aria-current={routeKey === 'about' ? 'page' : undefined}>About me</a>
+            <a href="#/page/contact" aria-current={routeKey === 'page/contact' ? 'page' : undefined}>Contact</a>
           </nav>
         </div>
         <a className="wordmark" href="#/" aria-label={`${BRAND}, home`}>{BRAND}</a>
@@ -163,7 +137,8 @@ export default function Header({ routeKey }) {
           </button>
         </div>
       </div>
-      <div className={`mobile-nav-backdrop${navOpen ? ' open' : ''}`}>
+    </header>
+    <div className={`mobile-nav-backdrop${navOpen ? ' open' : ''}`}>
         <button
           className="mobile-nav-scrim"
           type="button"
@@ -194,7 +169,7 @@ export default function Header({ routeKey }) {
             <div className="mobile-nav-shop">
               <a className="mobile-nav-primary" href="#/collection/all-products" onClick={() => setNavOpen(false)}>Shop all</a>
               <span className="mobile-nav-label">Shop by category</span>
-              {SHOP_LINKS.slice(0, 5).map(([handle, label]) => (
+              {CATEGORIES.map(({ handle, label }) => (
                 <a key={handle} className="mobile-nav-category" href={`#/collection/${handle}`} onClick={() => setNavOpen(false)}>{label}</a>
               ))}
             </div>
@@ -204,7 +179,7 @@ export default function Header({ routeKey }) {
             <CurrencySwitcher variant="pills" />
           </div>
         </nav>
-      </div>
-    </header>
+    </div>
+    </>
   )
 }

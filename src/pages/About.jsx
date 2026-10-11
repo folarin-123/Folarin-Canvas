@@ -36,7 +36,7 @@ export default function About() {
           <section className="about-sec" aria-labelledby="bio-title">
             <h2 id="bio-title">{PROFILE.bioTitle}</h2>
             <p className="lead">{PROFILE.bio}</p>
-            <p><a className="btn" href={PROFILE.cvLink.href} target="_blank" rel="noopener noreferrer">{PROFILE.cvLink.label}</a></p>
+            {PROFILE.cvLink && <p><a className="btn" href={PROFILE.cvLink.href} target="_blank" rel="noopener noreferrer">{PROFILE.cvLink.label}</a></p>}
           </section>
         </div>
       </div>

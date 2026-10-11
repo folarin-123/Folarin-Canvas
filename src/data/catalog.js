@@ -1,5 +1,6 @@
-// Prices are in naira (NGN). Other currencies are shown for reference only:
-// Paystack charges in NGN for Nigerian accounts, so checkout is always in naira.
+import { LEAD_TIME_TEXT } from './site.js'
+
+// Prices are in naira (NGN). Static indicative conversion rates; review before relying on them. Orders and payment are in naira.
 export const CURRENCIES = {
   NGN: { symbol: '₦', rate: 1, label: 'NGN ₦', decimals: 0 },
   USD: { symbol: '$', rate: 0.00065, label: 'USD $', decimals: 2 },
@@ -18,6 +19,7 @@ export const SIZES = {
 // fabric  = plain | ankara | adire | asooke (drives the pattern in the picture)
 // color   = main fabric colour, alt = pattern accent colour
 export const PRODUCTS = [
+  // Photo example: { id: 'ankara-wrap', image: '/products/ankara-wrap.jpg', detailImage: '/products/ankara-wrap-detail.jpg' }
   // Trousers
   { id: 'lagos-tailored', kind: 'trousers', variant: 'tailored', fabric: 'plain', col: 'trousers', fit: 'men', title: 'Lagos Tailored Trousers', price: 38000, color: '#1f2430', material: 'Stretch cotton twill', tag: 'Bestseller', blurb: 'A clean, tapered trouser for the office, church and everything after. Flat front, side pockets, and a crease that holds through Lagos traffic.' },
   { id: 'ankara-palazzo', kind: 'trousers', variant: 'palazzo', fabric: 'ankara', col: 'trousers', fit: 'women', title: 'Ankara Palazzo Trousers', price: 32000, color: '#c2491d', alt: '#f3c14b', material: 'Ankara (African wax print cotton)', tag: 'New', blurb: 'High-waisted and wide in the leg, cut from bold wax print with a plain waistband. Dress it up with a fitted top or wear it with a tee.' },
@@ -56,6 +58,14 @@ export const COLLECTIONS = {
   'all-products': { title: 'Shop all', blurb: 'Everything we make.', pick: 'ankara-palazzo' },
 }
 
+export const CATEGORIES = [
+  { handle: 'sets', label: 'Complete outfits' },
+  { handle: 'trousers', label: 'Trousers' },
+  { handle: 'skirts', label: 'Skirts' },
+  { handle: 'tops', label: 'Tops and kaftans' },
+  { handle: 'accessories', label: 'Caps and gele' },
+]
+
 // Shown in "Popular right now" on the home page.
 export const FEATURED = ['ankara-wrap', 'lagos-tailored', 'embroidered-kaftan', 'iro-buba', 'adire-straight']
 
@@ -73,7 +83,7 @@ export const needsSize = (p) => sizesFor(p).length > 1
 export function detailsFor(p) {
   const rows = [`Fabric: ${p.material}`, FIT_LABEL[p.fit]]
   if (p.col === 'accessories') rows.push('Handmade, so colour and weave vary slightly')
-  else rows.push('Made to order in 7 to 10 working days', 'Need a custom fit? Add your measurements at checkout')
+  else rows.push(`Made to order in ${LEAD_TIME_TEXT}`, 'Need a custom fit? Add your measurements at checkout')
   rows.push(p.fabric === 'plain' ? 'Care: dry clean or gentle hand wash' : 'Care: hand wash cold, dry in the shade')
   return rows
 }

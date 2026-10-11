@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ProductArt } from './Art.jsx'
 
-export default function ProductVisual({ product, view = 1, className, decorative = false }) {
+export default function ProductVisual({ product, view = 1, className, decorative = false, priority = false }) {
   const source = view === 2 ? (product.detailImage || product.image) : product.image
   const [loadedSource, setLoadedSource] = useState('')
   const [failedSource, setFailedSource] = useState('')
@@ -20,7 +20,10 @@ export default function ProductVisual({ product, view = 1, className, decorative
         src={source}
         alt={decorative ? '' : product.title}
         aria-hidden={decorative || undefined}
-        loading="lazy"
+        width="864"
+        height="1080"
+        loading={priority ? 'eager' : 'lazy'}
+        fetchPriority={priority ? 'high' : 'auto'}
         decoding="async"
         onLoad={() => setLoadedSource(source)}
         onError={() => setFailedSource(source)}

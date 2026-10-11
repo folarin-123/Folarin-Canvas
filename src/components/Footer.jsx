@@ -1,19 +1,23 @@
-import { useEffect, useState } from 'react'
-import { BRAND, SOCIALS } from '../data/site.js'
+import { BRAND, SOCIALS, WHATSAPP, EMAIL } from '../data/site.js'
 import CurrencySwitcher from './CurrencySwitcher.jsx'
 import CookieSettingsButton from './CookieSettingsButton.jsx'
+import { whatsappLink } from '../utils/whatsapp.js'
+import { SocialIcon, WhatsAppIcon } from './Icons.jsx'
+import { useReveal } from '../hooks/useReveal.js'
 
 export default function Footer() {
-  const [year, setYear] = useState('')
-  useEffect(() => setYear(String(new Date().getFullYear())), [])
+  const year = new Date().getFullYear()
+  const brandRef = useReveal()
+  const helpRef = useReveal()
+  const socialRef = useReveal()
   return (
     <footer className="site-footer">
       <div className="wrap foot">
-        <div>
+        <div className="reveal" ref={brandRef}>
           <a className="wordmark" href="#/">{BRAND}</a>
           <p>Trousers, skirts, kaftans and traditional wear, made to order.</p>
         </div>
-        <nav aria-label="Help">
+        <nav className="reveal" ref={helpRef} aria-label="Help">
           <h2>Help</h2>
           <ul>
             <li><a href="#/about">About me</a></li>
@@ -25,21 +29,23 @@ export default function Footer() {
             <li><CookieSettingsButton /></li>
           </ul>
         </nav>
-        <nav aria-label="Social">
+        <nav className="reveal" ref={socialRef} aria-label="Social">
           <h2>Follow</h2>
           <ul>
+            <li><a className="footer-social-link" href={whatsappLink(`Hello ${BRAND}, I have a question.`)} target="_blank" rel="noopener noreferrer"><WhatsAppIcon /> WhatsApp · {WHATSAPP.display}</a></li>
             {SOCIALS.map((s) => (
               <li key={s.id}>
-                <a href={s.href} target="_blank" rel="noopener noreferrer">{s.label}</a>
+                <a className="footer-social-link" href={s.href} target="_blank" rel="noopener noreferrer"><SocialIcon id={s.id} /> {s.label}</a>
               </li>
             ))}
           </ul>
+          <p><a href={`mailto:${EMAIL}`}>{EMAIL}</a></p>
         </nav>
       </div>
       <div className="wrap footer-currency">
         <CurrencySwitcher variant="pills" />
       </div>
-      <div className="wrap legal">&copy; {year} {BRAND}. Payments by Paystack.</div>
+      <div className="wrap legal">&copy; {year} {BRAND}. Orders and payments handled on WhatsApp.</div>
     </footer>
   )
 }

@@ -9,8 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource/bodoni-moda": "^5.3.0",
+    "@fontsource/hanken-grotesk": "^5.3.0",
     "@fontsource/noto-sans": "^5.3.0",
-    "@paystack/inline-js": "^2.26.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
