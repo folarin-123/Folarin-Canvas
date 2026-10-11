@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { CATEGORIES } from '../data/catalog.js'
 import { BRAND } from '../data/site.js'
 import { useShop } from '../context/ShopContext.jsx'
-import CurrencySwitcher from './CurrencySwitcher.jsx'
 
 export default function Header({ routeKey }) {
   const { count, openCart } = useShop()
@@ -126,7 +125,6 @@ export default function Header({ routeKey }) {
         </div>
         <a className="wordmark" href="#/" aria-label={`${BRAND}, home`}>{BRAND}</a>
         <div className="util">
-          <div className="desktop-currency"><CurrencySwitcher variant="menu" /></div>
           <button className={`cart-btn${cartBumped ? ' bumped' : ''}`} aria-label="Open cart" onClick={openCart}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
               <path d="M5 8h14l-1 12H6L5 8z" />
@@ -174,9 +172,6 @@ export default function Header({ routeKey }) {
               ))}
             </div>
             <a className="mobile-nav-primary" href="#/about" onClick={() => setNavOpen(false)}>About me</a>
-          </div>
-          <div className="mobile-nav-currency">
-            <CurrencySwitcher variant="pills" />
           </div>
         </nav>
     </div>

@@ -13,7 +13,7 @@ import { WhatsAppIcon } from '../components/Icons.jsx'
 
 export default function Product({ id }) {
   const p = byId(id)
-  const { currency, add, drawerOpen } = useShop()
+  const { add, drawerOpen } = useShop()
   const [view, setView] = useState(1)
   const [qty, setQty] = useState(1)
   const [size, setSize] = useState('')
@@ -85,7 +85,7 @@ export default function Product({ id }) {
 
         <div className="pdp-info">
           <h1>{p.title}</h1>
-          <p className="price big"><Money amount={p.price} currency={currency} /></p>
+          <p className="price big"><Money amount={p.price} /></p>
           <p>{p.blurb}</p>
 
           {family.length > 1 && (
@@ -162,7 +162,7 @@ export default function Product({ id }) {
               <a href="#/page/shipping-and-returns">Read the full policy</a>.
             </p>
           </details>
-          <p className="shipping-note">Free Nigeria delivery on orders over <Money amount={SHIPPING.freeOver} currency="NGN" />.</p>
+          <p className="shipping-note">Free Nigeria delivery on orders over <Money amount={SHIPPING.freeOver} />.</p>
         </div>
       </div>
 
@@ -175,7 +175,7 @@ export default function Product({ id }) {
       {sizeGuideOpen && <SizeGuideDialog onClose={() => setSizeGuideOpen(false)} />}
       {stickyVisible && !drawerOpen && createPortal(
         <div className="sticky-add">
-          <div><strong>{p.title}</strong><span><Money amount={p.price} currency={currency} /></span></div>
+          <div><strong>{p.title}</strong><span><Money amount={p.price} /></span></div>
           <button className="btn" onClick={() => {
             if (!addToCart()) return
             setAdded(true)

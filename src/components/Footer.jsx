@@ -1,5 +1,4 @@
 import { BRAND, SOCIALS } from '../data/site.js'
-import CurrencySwitcher from './CurrencySwitcher.jsx'
 import CookieSettingsButton from './CookieSettingsButton.jsx'
 import { whatsappLink } from '../utils/whatsapp.js'
 import { SocialIcon, WhatsAppIcon } from './Icons.jsx'
@@ -40,9 +39,6 @@ export default function Footer() {
             ))}
           </ul>
         </nav>
-      </div>
-      <div className="wrap footer-currency">
-        <CurrencySwitcher variant="pills" />
       </div>
       <div className="wrap legal">&copy; {year} {BRAND}. Orders and payments handled on WhatsApp.</div>
     </footer>

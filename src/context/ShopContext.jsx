@@ -1,11 +1,17 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState } from 'react'
-import { CURRENCIES, byId, sizesFor } from '../data/catalog.js'
+import { byId, sizesFor } from '../data/catalog.js'
 
 const ShopContext = createContext(null)
-const KEY_CURRENCY = 'fc:currency'
+const LEGACY_CURRENCY_KEY = 'fc:currency'
 const KEY_CART = 'fc:cart'
 const KEY_PENDING_ORDER = 'fc:pending-order'
 const KEY_PROFILE = 'fc:profile'
+
+try {
+  localStorage.removeItem(LEGACY_CURRENCY_KEY)
+} catch {
+  // Storage can be unavailable in restricted browser contexts.
+}
 
 function readStorage(key, fallback) {
   try {
@@ -69,18 +75,17 @@ function initCart() {
   return saved.filter((i) => i && byId(i.id) && i.qty > 0 && sizesFor(byId(i.id)).includes(i.size))
 }
 
-export function formatMoney(ngn, currency) {
-  const c = CURRENCIES[currency]
-  const v = ngn * c.rate
-  if (c.decimals === 0) return c.symbol + Math.round(v).toLocaleString('en-NG')
-  return c.symbol + v.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+const nairaFormatter = new Intl.NumberFormat('en-NG', {
+  style: 'currency',
+  currency: 'NGN',
+  maximumFractionDigits: 0,
+})
+
+export function formatMoney(ngn) {
+  return nairaFormatter.format(ngn)
 }
 
 export function ShopProvider({ children }) {
-  const [currency, setCurrency] = useState(() => {
-    const saved = readStorage(KEY_CURRENCY, 'NGN')
-    return CURRENCIES[saved] ? saved : 'NGN'
-  })
   const [cart, dispatch] = useReducer(cartReducer, undefined, initCart)
   const [pendingOrder, setPendingOrder] = useState(() => readStorage(KEY_PENDING_ORDER, null))
   const [profile, setProfile] = useState(initProfile)
@@ -90,14 +95,11 @@ export function ShopProvider({ children }) {
   const toastTimer = useRef(0)
 
   useEffect(() => {
-    writeStorage(KEY_CURRENCY, currency)
-  }, [currency])
-  useEffect(() => {
     writeStorage(KEY_CART, cart)
   }, [cart])
   useEffect(() => () => clearTimeout(toastTimer.current), [])
 
-  const money = useCallback((ngn) => formatMoney(ngn, currency), [currency])
+  const money = useCallback((ngn) => formatMoney(ngn), [])
   const showToast = useCallback((message) => {
     setToast(message)
     clearTimeout(toastTimer.current)
@@ -163,10 +165,10 @@ export function ShopProvider({ children }) {
 
   const value = useMemo(
     () => ({
-      currency, setCurrency, money, cart, count, subtotal, add, step, remove, changeSize, clearCart, pendingOrder, savePendingOrder, clearPendingOrder, profile, saveProfile, clearProfile,
+      money, cart, count, subtotal, add, step, remove, changeSize, clearCart, pendingOrder, savePendingOrder, clearPendingOrder, profile, saveProfile, clearProfile,
       drawerOpen, openCart, closeCart, checkoutOpen, openCheckout, closeCheckout, toast, showToast,
     }),
-    [currency, money, cart, count, subtotal, add, step, remove, changeSize, clearCart, pendingOrder, savePendingOrder, clearPendingOrder, profile, saveProfile, clearProfile, drawerOpen, openCart, closeCart, checkoutOpen, openCheckout, closeCheckout, toast, showToast],
+    [money, cart, count, subtotal, add, step, remove, changeSize, clearCart, pendingOrder, savePendingOrder, clearPendingOrder, profile, saveProfile, clearProfile, drawerOpen, openCart, closeCart, checkoutOpen, openCheckout, closeCheckout, toast, showToast],
   )
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>
 }

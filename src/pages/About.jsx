@@ -11,7 +11,7 @@ export default function About() {
       <div className="about-grid">
         <aside className="about-aside">
           <figure className="portrait">
-            <img src={portrait} width="864" height="1080" alt={PROFILE.portraitAlt} />
+            <img src={portrait} width="864" height="1080" alt={PROFILE.portraitAlt} loading="lazy" decoding="async" />
           </figure>
         </aside>
 

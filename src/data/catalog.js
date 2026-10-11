@@ -1,13 +1,5 @@
 import { LEAD_TIME_TEXT } from './site.js'
 
-// Prices are in naira (NGN). Static indicative conversion rates; review before relying on them. Orders and payment are in naira.
-export const CURRENCIES = {
-  NGN: { symbol: '₦', rate: 1, label: 'NGN ₦', decimals: 0 },
-  USD: { symbol: '$', rate: 0.00065, label: 'USD $', decimals: 2 },
-  GBP: { symbol: '£', rate: 0.00049, label: 'GBP £', decimals: 2 },
-  EUR: { symbol: '€', rate: 0.00056, label: 'EUR €', decimals: 2 },
-}
-
 export const SIZES = {
   women: ['UK 8', 'UK 10', 'UK 12', 'UK 14', 'UK 16', 'UK 18'],
   men: ['S', 'M', 'L', 'XL', 'XXL'],

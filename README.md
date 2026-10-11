@@ -21,7 +21,7 @@ To change the WhatsApp number or the payment note shown during checkout, edit `W
 
 ## Products and photos
 
-Product data, prices, sizes and collections are in `src/data/catalog.js`. Product artwork uses inline SVG by default. To use a photo, add an `image` URL (and optionally `detailImage`) to a product; see `public/products/README.md`.
+Product data, NGN prices, sizes and collections are in `src/data/catalog.js`. All storefront prices display as whole naira. Product artwork uses inline SVG by default. To use a photo, add an `image` URL (and optionally `detailImage`) to a product; see `public/products/README.md`.
 
 ## Deploy to Vercel
 
@@ -32,7 +32,7 @@ Import the repository into Vercel. The included `vercel.json` configures the Vit
 | What | File |
 | --- | --- |
 | Brand, WhatsApp number, payment note, delivery fees and states | `src/data/site.js` |
-| Products, prices, sizes, collections and currencies | `src/data/catalog.js` |
+| Products, NGN prices, sizes and collections | `src/data/catalog.js` |
 | Pricing validation and delivery calculations | `src/data/pricing.js` |
 | WhatsApp order messages and links | `src/utils/whatsapp.js` |
 | Storefront styles | `src/styles/index.css` |

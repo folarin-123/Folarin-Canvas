@@ -49,7 +49,7 @@ const PAGES = {
     body: () => (
       <>
         <h2>Delivery</h2>
-        <p>Every piece is made to order and ships within {LEAD_TIME_TEXT}. Delivery is <Money amount={SHIPPING.lagos} currency="NGN" /> in Lagos and <Money amount={SHIPPING.other} currency="NGN" /> to other states, and free on orders of <Money amount={SHIPPING.freeOver} currency="NGN" /> or more. Your final delivery fee is confirmed with you on WhatsApp before payment.</p>
+        <p>Every piece is made to order and ships within {LEAD_TIME_TEXT}. Delivery is <Money amount={SHIPPING.lagos} /> in Lagos and <Money amount={SHIPPING.other} /> to other states, and free on orders of <Money amount={SHIPPING.freeOver} /> or more. Your final delivery fee is confirmed with you on WhatsApp before payment.</p>
         <h2>Returns and remakes</h2>
         <p>If an item is faulty or differs from what you ordered, contact us within 7 days of delivery so we can arrange a remake or another appropriate resolution.</p>
       </>
@@ -78,7 +78,7 @@ const PAGES = {
           <li><strong>Measurements:</strong> any body measurements or notes you choose to provide, so we can make your garment to size.</li>
           <li><strong>Contact messages:</strong> your name, email and message so we can reply in WhatsApp or by email.</li>
           <li><strong>WhatsApp updates:</strong> your WhatsApp contact and request for updates, if you ask us to include you.</li>
-          <li><strong>Browser storage:</strong> cart contents and your chosen currency are stored locally on your device to keep the shop working as you expect.</li>
+          <li><strong>Browser storage:</strong> cart contents are stored locally on your device to keep the shop working as you expect.</li>
         </ul>
 
         <h2>Our legal bases</h2>
@@ -122,7 +122,6 @@ const PAGES = {
             </thead>
             <tbody>
               <tr><td><code>fc:cart</code></td><td>Remembers cart items.</td><td>Until browser storage is cleared.</td><td>Yes</td></tr>
-              <tr><td><code>fc:currency</code></td><td>Remembers your chosen display currency.</td><td>Until browser storage is cleared.</td><td>Yes</td></tr>
               <tr><td><code>fc:consent</code></td><td>Remembers your cookie choice, version and choice date.</td><td>Until you change it or clear browser storage.</td><td>Yes</td></tr>
               <tr><td>fc:pending-order</td><td>Keeps an order message available so you can resend it after a refresh.</td><td>Until you mark the order as sent or clear browser storage.</td><td>Yes</td></tr>
               <tr><td><code>fc:profile</code></td><td>Remembers your name, phone and delivery details to speed up future orders. You can forget these details in checkout.</td><td>Until you forget them or clear browser storage.</td><td>Yes</td></tr>
@@ -134,7 +133,7 @@ const PAGES = {
         <p>If you choose to open WhatsApp, order details you send are processed by Meta under WhatsApp’s own privacy practices. Payment is arranged directly with the seller; this website does not collect payment card data.</p>
 
         <h2>Change or withdraw your choice</h2>
-        <p>Choose “Essential only” to decline optional uses, or “Accept all” to allow any optional categories we may add later. There are no analytics or advertising tools on the site now. Use <CookieSettingsButton /> in the footer to reopen your choice. You can also clear this site’s local storage and cookies in your browser settings; essential cart and currency preferences will then be forgotten.</p>
+        <p>Choose “Essential only” to decline optional uses, or “Accept all” to allow any optional categories we may add later. There are no analytics or advertising tools on the site now. Use <CookieSettingsButton /> in the footer to reopen your choice. You can also clear this site’s local storage and cookies in your browser settings; essential cart information will then be forgotten.</p>
       </>
     ),
   },

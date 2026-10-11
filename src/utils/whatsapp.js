@@ -6,7 +6,7 @@ export { whatsappLink }
 export function buildOrderMessage({ ref, customer, priced }) {
   const note = String(customer.note || '').trim().slice(0, 300) || "I'll send my measurements here"
   const itemLines = priced.lines.map((line, index) => (
-    `${index + 1}. ${line.title} (${line.size}) x ${line.qty} - ${formatMoney(line.total, 'NGN')}`
+    `${index + 1}. ${line.title} (${line.size}) x ${line.qty} - ${formatMoney(line.total)}`
   ))
   const header = [
     `Hello ${BRAND} 👋 I'd like to place an order.`,
@@ -21,9 +21,9 @@ export function buildOrderMessage({ ref, customer, priced }) {
   ].filter(Boolean)
   const totals = [
     '',
-    `Subtotal: ${formatMoney(priced.subtotal, 'NGN')}`,
-    `Delivery (estimate): ${priced.shipping === 0 ? 'Free' : formatMoney(priced.shipping, 'NGN')}`,
-    `Total: ${formatMoney(priced.total, 'NGN')}`,
+    `Subtotal: ${formatMoney(priced.subtotal)}`,
+    `Delivery (estimate): ${priced.shipping === 0 ? 'Free' : formatMoney(priced.shipping)}`,
+    `Total: ${formatMoney(priced.total)}`,
     '',
     `Measurements / notes: ${note}`,
   ]

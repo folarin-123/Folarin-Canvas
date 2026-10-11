@@ -22,10 +22,68 @@
     <meta name="twitter:description" content="Made-to-order trousers, skirts, kaftans and traditional wear, delivered across Nigeria." />
     <meta name="twitter:image" content="https://folarin-canvas.vercel.app/og-image.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      html, body { min-height: 100%; }
+      body { margin: 0; }
+      .app-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        background: linear-gradient(135deg, #0f2d21, #0a2016);
+        color: #eef0e8;
+        opacity: 1;
+        transition: opacity 350ms ease;
+      }
+      .app-loader-content { display: grid; justify-items: center; gap: 1.25rem; }
+      .app-loader-wordmark {
+        font: 400 clamp(1.65rem, 6vw, 2.5rem)/1.1 Didot, "Bodoni 72", Georgia, serif;
+        letter-spacing: .025em;
+        opacity: .45;
+        animation: app-loader-appear 400ms ease forwards;
+      }
+      .app-loader-track {
+        position: relative;
+        width: clamp(9rem, 30vw, 13rem);
+        height: 1px;
+        overflow: hidden;
+        background: rgba(196, 161, 92, .25);
+      }
+      .app-loader-track::after {
+        position: absolute;
+        inset: 0;
+        background: #c4a15c;
+        content: "";
+        transform: scaleX(0);
+        transform-origin: left;
+        animation: app-loader-fill 1.4s ease-in-out infinite;
+      }
+      .app-loader-leaving { opacity: 0; }
+      @keyframes app-loader-appear { to { opacity: 1; } }
+      @keyframes app-loader-fill {
+        0% { transform: scaleX(0); }
+        65%, 100% { transform: scaleX(1); }
+      }
+      html.app-booting, body.app-booting { background: #0f2d21; }
+      @media (prefers-reduced-motion: reduce) {
+        .app-loader-wordmark { opacity: 1; animation: none; }
+        .app-loader-track::after { transform: scaleX(1); animation: none; }
+        .app-loader { transition: none; }
+      }
+    </style>
   </head>
   <body>
     <noscript>This site needs JavaScript to show the shop.</noscript>
-    <div id="root"></div>
+    <div id="root">
+      <div id="app-loader" class="app-loader" role="status" aria-label="Loading Folarin's Canvas">
+        <div class="app-loader-content">
+          <div class="app-loader-wordmark" aria-hidden="true">Folarin's Canvas</div>
+          <div class="app-loader-track" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

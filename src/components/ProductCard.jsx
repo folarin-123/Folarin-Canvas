@@ -6,7 +6,7 @@ import Money from './Money.jsx'
 import { useReveal } from '../hooks/useReveal.js'
 
 export default function ProductCard({ product: p }) {
-  const { add, currency } = useShop()
+  const { add } = useShop()
   const [added, setAdded] = useState(false)
   const feedbackTimer = useRef(0)
   const revealRef = useReveal()
@@ -30,7 +30,7 @@ export default function ProductCard({ product: p }) {
       </a>
       <div className="card-info">
         <a className="card-title" href={`#/product/${p.id}`}>{p.title}</a>
-        <span className="price"><Money amount={p.price} currency={currency} /></span>
+        <span className="price"><Money amount={p.price} /></span>
       </div>
       {needsSize(p) ? (
         <a className="btn btn-line block" href={`#/product/${p.id}`}>Choose size</a>

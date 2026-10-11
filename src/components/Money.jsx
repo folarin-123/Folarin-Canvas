@@ -1,17 +1,12 @@
-import { CURRENCIES } from '../data/catalog.js'
-import { formatMoney, useShop } from '../context/ShopContext.jsx'
+import { formatMoney } from '../context/ShopContext.jsx'
 
-export default function Money({ amount, currency }) {
-  const { currency: selectedCurrency } = useShop()
-  const code = currency || selectedCurrency
-  const symbol = CURRENCIES[code].symbol
-  const formatted = formatMoney(amount, code)
+export default function Money({ amount }) {
+  const formatted = formatMoney(amount)
 
   return (
-    <span className="money" aria-label={code === 'NGN' ? formatted : `Approximately ${formatted} ${code}`} title={code === 'NGN' ? undefined : 'Approximate display conversion; order and payment are confirmed in naira.'}>
-      {code !== 'NGN' && <span className="approx" aria-hidden="true">≈</span>}
-      <span className="sym">{symbol}</span>
-      {formatted.slice(symbol.length)}
+    <span className="money" aria-label={formatted}>
+      <span className="sym">₦</span>
+      {formatted.replace(/^₦\s*/u, '')}
     </span>
   )
 }

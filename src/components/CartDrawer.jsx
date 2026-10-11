@@ -8,7 +8,7 @@ import { whatsappLink } from '../utils/whatsapp.js'
 import { WhatsAppIcon } from './Icons.jsx'
 
 export default function CartDrawer() {
-  const { cart, drawerOpen, closeCart, step, remove, changeSize, subtotal, currency, openCheckout, pendingOrder } = useShop()
+  const { cart, drawerOpen, closeCart, step, remove, changeSize, subtotal, openCheckout, pendingOrder } = useShop()
   const [removing, setRemoving] = useState('')
   const drawerRef = useRef(null)
   const closeRef = useRef(null)
@@ -75,7 +75,7 @@ export default function CartDrawer() {
                   <div className="cthumb"><ProductVisual product={p} decorative /></div>
                   <div>
                     <a className="ctitle" href={`#/product/${p.id}`} onClick={closeCart}>{p.title}</a>
-                    <div className="cprice"><Money amount={p.price} currency={currency} /></div>
+                    <div className="cprice"><Money amount={p.price} /></div>
                     {sizesFor(p).length > 1 ? (
                     <label className="cart-size">
                       <span className="sr">Size for {p.title}</span>
@@ -121,12 +121,12 @@ export default function CartDrawer() {
               <p>Send your order on WhatsApp. We’ll confirm availability, delivery and payment, then make your pieces in {LEAD_TIME_TEXT}.</p>
             </div>
             <div className="delivery-progress">
-              <div className="sub-row"><span>{subtotal >= SHIPPING.freeOver ? 'Free delivery unlocked' : 'Progress to free delivery'}</span><span>{subtotal >= SHIPPING.freeOver ? '✓' : <Money amount={SHIPPING.freeOver - subtotal} currency="NGN" />}</span></div>
+              <div className="sub-row"><span>{subtotal >= SHIPPING.freeOver ? 'Free delivery unlocked' : 'Progress to free delivery'}</span><span>{subtotal >= SHIPPING.freeOver ? '✓' : <Money amount={SHIPPING.freeOver - subtotal} />}</span></div>
               <div className="progress-track" role="progressbar" aria-label="Progress toward free delivery" aria-valuemin="0" aria-valuemax={SHIPPING.freeOver} aria-valuenow={Math.min(subtotal, SHIPPING.freeOver)}>
                 <span className="progress-fill" style={{ transform: `scaleX(${Math.min(subtotal / SHIPPING.freeOver, 1)})` }} />
               </div>
             </div>
-            <div className="sub-row"><span>Subtotal</span><span><Money amount={subtotal} currency={currency} /></span></div>
+            <div className="sub-row"><span>Subtotal</span><span><Money amount={subtotal} /></span></div>
             <small>Delivery is estimated at checkout and confirmed on WhatsApp.</small>
             {pendingOrder && <a className="btn-line pending-resend" href={whatsappLink(pendingOrder.message)} target="_blank" rel="noopener noreferrer"><WhatsAppIcon /> Resend your last order</a>}
             <button className="btn block" onClick={openCheckout}><WhatsAppIcon /> Checkout on WhatsApp</button>
