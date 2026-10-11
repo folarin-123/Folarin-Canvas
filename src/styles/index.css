@@ -534,6 +534,29 @@ body:has(.cookie-notice) .whatsapp-float{bottom:calc(10rem + env(safe-area-inset
   .drawer-foot .pending-resend{min-height:40px;padding:.5rem}
 }
 
+.pdp-info{--fit-accent:color-mix(in srgb,var(--accent) 55%,var(--ink));gap:.5rem}
+.size-guide-row{align-items:baseline}
+.sizes{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.5rem}
+.size{min-width:3.5rem;width:auto;height:48px;min-height:48px;padding:0 .875rem;background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:var(--r-pill);font:500 .9375rem/1 var(--sans);cursor:pointer;transition:background-color .2s,border-color .2s,color .2s}
+.size:hover{border-color:var(--fit-accent)}
+.size.on,.size[aria-checked="true"]{background:color-mix(in srgb,var(--accent) 22%,var(--surface));color:var(--ink);border-color:var(--fit-accent)}
+.size:focus-visible{outline:2px solid var(--fit-accent);outline-offset:2px}
+.buy{display:grid;grid-template-columns:128px minmax(0,1fr);grid-template-areas:"qty add" "ask ask";align-items:center;gap:8px;margin:1.5rem 0 2rem}
+.buy .qty{grid-area:qty;display:grid;grid-template-columns:40px minmax(0,1fr) 40px;width:128px;height:48px;min-height:48px;overflow:visible;border:1px solid var(--line);border-radius:var(--r-pill);background:transparent}
+.buy .qty button{width:40px;min-width:40px;height:46px;min-height:46px;padding:0;border-radius:var(--r-pill);color:var(--ink)}
+.buy .qty input{font-size:16px}
+.buy .qty input{width:100%;min-width:0;height:100%;padding:0;color:var(--ink);outline:0}
+.buy .qty button:focus-visible,.buy .qty input:focus-visible{position:relative;z-index:1;outline:2px solid var(--fit-accent);outline-offset:1px}
+.buy>.btn{grid-area:add;width:100%;height:48px;min-height:48px;padding:0 12px;white-space:nowrap;font-size:.9375rem}
+.buy .ask-whatsapp{grid-area:ask;display:flex;width:100%;min-width:0;height:48px;min-height:48px;padding:0 1rem;overflow:hidden;white-space:nowrap;border:1px solid var(--fit-accent);border-radius:var(--r-pill);background:transparent;color:var(--fit-accent);font-size:.9375rem;line-height:1;text-overflow:clip}
+.buy .ask-whatsapp svg{flex:0 0 20px;width:20px;height:20px}
+.buy .ask-whatsapp:hover{background:color-mix(in srgb,var(--accent) 14%,var(--surface));border-color:var(--fit-accent);color:var(--ink)}
+.buy .ask-whatsapp:focus-visible,.buy>.btn:focus-visible{outline:2px solid var(--fit-accent);outline-offset:3px}
+.buy>.btn:focus-visible{outline-color:var(--fit-accent)}
+body:has(.pdp) .whatsapp-float{display:none}
+@media (max-width:400px){.sizes{display:grid;grid-template-columns:repeat(auto-fit,minmax(3.5rem,1fr))}}
+@media (max-width:375px){.sizes{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{scroll-behavior:auto!important;animation-duration:80ms!important;animation-iteration-count:1!important;transition-duration:80ms!important}

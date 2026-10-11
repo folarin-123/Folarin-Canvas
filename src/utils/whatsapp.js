@@ -1,9 +1,7 @@
-import { BRAND, WHATSAPP } from '../data/site.js'
+import { BRAND, whatsappLink } from '../data/site.js'
 import { formatMoney } from '../context/ShopContext.jsx'
 
-export function whatsappLink(text) {
-  return `https://wa.me/${WHATSAPP.number}?text=${encodeURIComponent(text)}`
-}
+export { whatsappLink }
 
 export function buildOrderMessage({ ref, customer, priced }) {
   const note = String(customer.note || '').trim().slice(0, 300) || "I'll send my measurements here"
@@ -51,5 +49,5 @@ export function buildOrderMessage({ ref, customer, priced }) {
 export const newOrderReference = () => `FC-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`.toUpperCase()
 
 export function whatsappLinkForProduct(product, size) {
-  return whatsappLink(`Hi, I'd like to ask about the ${product.title} (${size}).`)
+  return whatsappLink(`Hi, I'd like to ask about the ${product.title} (${size}). ${window.location.href}`)
 }

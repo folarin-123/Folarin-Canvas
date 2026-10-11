@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { BRAND, EMAIL, SHIPPING, WHATSAPP, LEAD_TIME_TEXT } from '../data/site.js'
+import { BRAND, EMAIL, SHIPPING, WHATSAPP_NUMBER, LEAD_TIME_TEXT } from '../data/site.js'
 import { validEmail } from '../utils/validators.js'
 import { whatsappLink } from '../utils/whatsapp.js'
 import { useDocumentTitle } from '../hooks/useDocumentTitle.js'
@@ -35,7 +35,7 @@ function ContactForm() {
       <div className="field"><label htmlFor="c-email">Email</label><input id="c-email" name="email" type="email" autoComplete="email" required /></div>
       <div className="field"><label htmlFor="c-msg">Message</label><textarea id="c-msg" name="message" rows="5" required /></div>
       <button className="btn" type="submit"><WhatsAppIcon /> Send message on WhatsApp</button>
-      <p className="note">Prefer email? <a href={`mailto:${EMAIL}`}>{EMAIL}</a> · WhatsApp: {WHATSAPP.display}</p>
+      <p className="note">Prefer email? <a href={`mailto:${EMAIL}`}>{EMAIL}</a> · WhatsApp: +{WHATSAPP_NUMBER.replace(/^(\d{3})(\d{3})(\d{3})(\d{4})$/, '$1 $2 $3 $4')}</p>
       {whatsappHref && <p><a className="btn-line" href={whatsappHref} target="_blank" rel="noopener noreferrer"><WhatsAppIcon /> Open WhatsApp message</a></p>}
       <p className="form-msg note" role="status" aria-live="polite">{message}</p>
     </form>

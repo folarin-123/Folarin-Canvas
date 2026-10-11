@@ -17,7 +17,7 @@ Open the local URL printed by Vite. No environment variables are required.
 
 Customers add products to their cart, enter contact and delivery details, review the order message, and choose **Send order on WhatsApp**. The message opens a chat with the shop; the customer confirms when they have sent it. Availability, final delivery costs and payment are arranged directly in WhatsApp.
 
-To change the WhatsApp number or the payment note shown during checkout, edit `WHATSAPP` or `PAYMENT_NOTE` in `src/data/site.js`. Use the international number with digits only for `WHATSAPP.number`; `WHATSAPP.display` is the human-readable number.
+To change the WhatsApp number or the payment note shown during checkout, edit `WHATSAPP_NUMBER` or `PAYMENT_NOTE` in `src/data/site.js`. Set `WHATSAPP_NUMBER` in international format using digits only; the shared `whatsappLink` helper builds chat links.
 
 ## Products and photos
 

@@ -1,4 +1,4 @@
-import { BRAND, SOCIALS, WHATSAPP, EMAIL } from '../data/site.js'
+import { BRAND, SOCIALS } from '../data/site.js'
 import CurrencySwitcher from './CurrencySwitcher.jsx'
 import CookieSettingsButton from './CookieSettingsButton.jsx'
 import { whatsappLink } from '../utils/whatsapp.js'
@@ -32,14 +32,13 @@ export default function Footer() {
         <nav className="reveal" ref={socialRef} aria-label="Social">
           <h2>Follow</h2>
           <ul>
-            <li><a className="footer-social-link" href={whatsappLink(`Hello ${BRAND}, I have a question.`)} target="_blank" rel="noopener noreferrer"><WhatsAppIcon /> WhatsApp · {WHATSAPP.display}</a></li>
+            <li><a className="footer-social-link" href={whatsappLink(`Hello ${BRAND}, I have a question.`)} target="_blank" rel="noopener noreferrer"><WhatsAppIcon /> WhatsApp</a></li>
             {SOCIALS.map((s) => (
               <li key={s.id}>
                 <a className="footer-social-link" href={s.href} target="_blank" rel="noopener noreferrer"><SocialIcon id={s.id} /> {s.label}</a>
               </li>
             ))}
           </ul>
-          <p><a href={`mailto:${EMAIL}`}>{EMAIL}</a></p>
         </nav>
       </div>
       <div className="wrap footer-currency">

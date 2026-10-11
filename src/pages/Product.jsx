@@ -133,9 +133,6 @@ export default function Product({ id }) {
               <input type="number" min="1" max="99" value={qty} aria-label="Quantity" onChange={(e) => setQty(clamp(parseInt(e.target.value, 10) || 1))} />
               <button type="button" aria-label="Increase quantity" onClick={() => setQty((q) => clamp(q + 1))}>+</button>
             </div>
-            <a className="btn-line ask-whatsapp" href={whatsappLinkForProduct(p, size || sizes[0] || 'One size')} target="_blank" rel="noopener noreferrer">
-              <WhatsAppIcon /> Ask about this piece
-            </a>
             <button
               ref={addButtonRef}
               className={`btn block${added ? ' added' : ''}`}
@@ -149,6 +146,9 @@ export default function Product({ id }) {
             >
               {added ? <><span aria-hidden="true">✓</span> Added!</> : 'Add to cart'}
             </button>
+            <a className="btn-line ask-whatsapp" href={whatsappLinkForProduct(p, size || sizes[0] || 'One size')} target="_blank" rel="noopener noreferrer">
+              <WhatsAppIcon /> Ask about this piece
+            </a>
           </div>
 
           <details open>
