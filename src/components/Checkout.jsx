@@ -14,7 +14,7 @@ const MEASUREMENTS_NOTE = "I'll send my measurements on WhatsApp"
 
 export default function Checkout() {
   const {
-    cart, subtotal, checkoutOpen, closeCheckout, clearCart, pendingOrder,
+    cart, currency, subtotal, checkoutOpen, closeCheckout, clearCart, pendingOrder,
     savePendingOrder, clearPendingOrder, openCart, profile, saveProfile, clearProfile,
   } = useShop()
   const [form, setForm] = useState(() => ({ ...EMPTY, ...profile }))
@@ -188,18 +188,21 @@ export default function Checkout() {
           <div className="co-body"><p>Your cart is empty.</p><a className="btn" href="#/collection/all-products" onClick={closeCheckout}>Shop all</a></div>
         ) : reviewOrder ? (
           <div className="co-body">
+            {currency !== 'NGN' && (
+              <p className="notice">Payments are processed in Nigerian Naira (₦). Prices in other currencies are approximate.</p>
+            )}
             {pendingOrder && (
               <p className="pending-order">A previous order is saved. You can resend it from <a href={whatsappLink(pendingOrder.message)} target="_blank" rel="noopener noreferrer">WhatsApp</a>.</p>
             )}
             <div className="co-summary">
               <ul className="co-lines">
                 {reviewOrder.priced.lines.map((line) => (
-                  <li key={line.id + line.size}><span>{line.qty} × {line.title} <span>({line.size})</span></span><b><Money amount={line.total} /></b></li>
+                  <li key={line.id + line.size}><span>{line.qty} × {line.title} <span>({line.size})</span></span><b><Money amount={line.total} currency="NGN" /></b></li>
                 ))}
               </ul>
-              <div className="sub-row"><span>Subtotal</span><span><Money amount={reviewOrder.priced.subtotal} /></span></div>
-              <div className="sub-row light"><span>Delivery (estimate)</span><span>{reviewOrder.priced.shipping === 0 ? 'Free' : <Money amount={reviewOrder.priced.shipping} />}</span></div>
-              <div className="sub-row big"><span>Total</span><span><Money amount={reviewOrder.priced.total} /></span></div>
+              <div className="sub-row"><span>Subtotal</span><span><Money amount={reviewOrder.priced.subtotal} currency="NGN" /></span></div>
+              <div className="sub-row light"><span>Delivery (estimate)</span><span>{reviewOrder.priced.shipping === 0 ? 'Free' : <Money amount={reviewOrder.priced.shipping} currency="NGN" />}</span></div>
+              <div className="sub-row big"><span>Total</span><span><Money amount={reviewOrder.priced.total} currency="NGN" /></span></div>
             </div>
             <label className="message-label" htmlFor="order-message">Order message preview</label>
             <textarea id="order-message" className="order-preview" ref={previewRef} readOnly value={reviewOrder.message} rows={12} />
@@ -214,6 +217,9 @@ export default function Checkout() {
           </div>
         ) : (
           <form className="co-body" onSubmit={onSubmit} noValidate>
+            {currency !== 'NGN' && (
+              <p className="notice">Payments are processed in Nigerian Naira (₦). Prices in other currencies are approximate.</p>
+            )}
             {pendingOrder && (
               <p className="pending-order">You have an order in progress. <a href={whatsappLink(pendingOrder.message)} target="_blank" rel="noopener noreferrer">Resend your last order on WhatsApp</a>.</p>
             )}
@@ -277,12 +283,12 @@ export default function Checkout() {
               <ul className="co-lines">
                 {cart.map((item) => {
                   const product = byId(item.id)
-                  return <li key={item.id + item.size}><span className="co-line-name">{item.qty} × {product.title} <span>({item.size})</span></span><b><Money amount={product.price * item.qty} /></b></li>
+                  return <li key={item.id + item.size}><span className="co-line-name">{item.qty} × {product.title} <span>({item.size})</span></span><b><Money amount={product.price * item.qty} currency="NGN" /></b></li>
                 })}
               </ul>
-              <div className="sub-row"><span>Subtotal</span><span><Money amount={subtotal} /></span></div>
-              <div className="sub-row light"><span>Delivery (estimate)</span><span>{fee === null ? 'Choose a state' : fee === 0 ? 'Free' : <Money amount={fee} />}</span></div>
-              <div className="sub-row big"><span>Total</span><span><Money amount={total === null ? subtotal : total} /></span></div>
+              <div className="sub-row"><span>Subtotal</span><span><Money amount={subtotal} currency="NGN" /></span></div>
+              <div className="sub-row light"><span>Delivery (estimate)</span><span>{fee === null ? 'Choose a state' : fee === 0 ? 'Free' : <Money amount={fee} currency="NGN" />}</span></div>
+              <div className="sub-row big"><span>Total</span><span><Money amount={total === null ? subtotal : total} currency="NGN" /></span></div>
               <small>Free delivery over {naira(SHIPPING.freeOver)}.</small>
             </div>
 

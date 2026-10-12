@@ -8,7 +8,7 @@ import { whatsappLink } from '../utils/whatsapp.js'
 import { WhatsAppIcon } from './Icons.jsx'
 
 export default function CartDrawer() {
-  const { cart, drawerOpen, closeCart, step, remove, changeSize, subtotal, openCheckout, pendingOrder } = useShop()
+  const { cart, currency, drawerOpen, closeCart, step, remove, changeSize, subtotal, openCheckout, pendingOrder } = useShop()
   const [removing, setRemoving] = useState('')
   const drawerRef = useRef(null)
   const closeRef = useRef(null)
@@ -127,6 +127,9 @@ export default function CartDrawer() {
               </div>
             </div>
             <div className="sub-row"><span>Subtotal</span><span><Money amount={subtotal} /></span></div>
+            {currency !== 'NGN' && (
+              <small className="cart-charge-note">You'll be charged <Money amount={subtotal} currency="NGN" /> at checkout.</small>
+            )}
             <small>Delivery is estimated at checkout and confirmed on WhatsApp.</small>
             {pendingOrder && <a className="btn-line pending-resend" href={whatsappLink(pendingOrder.message)} target="_blank" rel="noopener noreferrer"><WhatsAppIcon /> Resend your last order</a>}
             <button className="btn block" onClick={openCheckout}><WhatsAppIcon /> Checkout on WhatsApp</button>

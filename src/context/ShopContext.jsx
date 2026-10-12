@@ -1,16 +1,23 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { byId, sizesFor } from '../data/catalog.js'
+import { CURRENCIES, DEFAULT_CURRENCY, formatMoney } from '../data/currency.js'
+
+export { formatMoney }
 
 const ShopContext = createContext(null)
-const LEGACY_CURRENCY_KEY = 'fc:currency'
+const KEY_CURRENCY = 'fc:currency'
 const KEY_CART = 'fc:cart'
 const KEY_PENDING_ORDER = 'fc:pending-order'
 const KEY_PROFILE = 'fc:profile'
 
-try {
-  localStorage.removeItem(LEGACY_CURRENCY_KEY)
-} catch {
-  // Storage can be unavailable in restricted browser contexts.
+function initCurrency() {
+  try {
+    const saved = localStorage.getItem(KEY_CURRENCY)
+    if (saved && CURRENCIES[saved]) return saved
+  } catch {
+    // Storage can be unavailable in restricted browser contexts.
+  }
+  return DEFAULT_CURRENCY
 }
 
 function readStorage(key, fallback) {
@@ -75,17 +82,8 @@ function initCart() {
   return saved.filter((i) => i && byId(i.id) && i.qty > 0 && sizesFor(byId(i.id)).includes(i.size))
 }
 
-const nairaFormatter = new Intl.NumberFormat('en-NG', {
-  style: 'currency',
-  currency: 'NGN',
-  maximumFractionDigits: 0,
-})
-
-export function formatMoney(ngn) {
-  return nairaFormatter.format(ngn)
-}
-
 export function ShopProvider({ children }) {
+  const [currency, setCurrencyState] = useState(initCurrency)
   const [cart, dispatch] = useReducer(cartReducer, undefined, initCart)
   const [pendingOrder, setPendingOrder] = useState(() => readStorage(KEY_PENDING_ORDER, null))
   const [profile, setProfile] = useState(initProfile)
@@ -94,12 +92,22 @@ export function ShopProvider({ children }) {
   const [toast, setToast] = useState('')
   const toastTimer = useRef(0)
 
+  const setCurrency = useCallback((nextCurrency) => {
+    const valid = CURRENCIES[nextCurrency] ? nextCurrency : DEFAULT_CURRENCY
+    setCurrencyState(valid)
+    try {
+      localStorage.setItem(KEY_CURRENCY, valid)
+    } catch {
+      // Storage can be unavailable in restricted browser contexts.
+    }
+  }, [])
+
   useEffect(() => {
     writeStorage(KEY_CART, cart)
   }, [cart])
   useEffect(() => () => clearTimeout(toastTimer.current), [])
 
-  const money = useCallback((ngn) => formatMoney(ngn), [])
+  const money = useCallback((ngn, code = currency) => formatMoney(ngn, code), [currency])
   const showToast = useCallback((message) => {
     setToast(message)
     clearTimeout(toastTimer.current)
@@ -165,10 +173,10 @@ export function ShopProvider({ children }) {
 
   const value = useMemo(
     () => ({
-      money, cart, count, subtotal, add, step, remove, changeSize, clearCart, pendingOrder, savePendingOrder, clearPendingOrder, profile, saveProfile, clearProfile,
+      currency, setCurrency, money, cart, count, subtotal, add, step, remove, changeSize, clearCart, pendingOrder, savePendingOrder, clearPendingOrder, profile, saveProfile, clearProfile,
       drawerOpen, openCart, closeCart, checkoutOpen, openCheckout, closeCheckout, toast, showToast,
     }),
-    [money, cart, count, subtotal, add, step, remove, changeSize, clearCart, pendingOrder, savePendingOrder, clearPendingOrder, profile, saveProfile, clearProfile, drawerOpen, openCart, closeCart, checkoutOpen, openCheckout, closeCheckout, toast, showToast],
+    [currency, setCurrency, money, cart, count, subtotal, add, step, remove, changeSize, clearCart, pendingOrder, savePendingOrder, clearPendingOrder, profile, saveProfile, clearProfile, drawerOpen, openCart, closeCart, checkoutOpen, openCheckout, closeCheckout, toast, showToast],
   )
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>
 }

@@ -1,5 +1,6 @@
 import { BRAND, SOCIALS } from '../data/site.js'
 import CookieSettingsButton from './CookieSettingsButton.jsx'
+import CurrencySwitcher from './CurrencySwitcher.jsx'
 import { whatsappLink } from '../utils/whatsapp.js'
 import { SocialIcon, WhatsAppIcon } from './Icons.jsx'
 import { useReveal } from '../hooks/useReveal.js'
@@ -15,6 +16,9 @@ export default function Footer() {
         <div className="reveal" ref={brandRef}>
           <a className="wordmark" href="#/">{BRAND}</a>
           <p>Trousers, skirts, kaftans and traditional wear, made to order.</p>
+          <div style={{ marginTop: '1.25rem' }}>
+            <CurrencySwitcher variant="pills" />
+          </div>
         </div>
         <nav className="reveal" ref={helpRef} aria-label="Help">
           <h2>Help</h2>
