@@ -174,7 +174,7 @@ export default function Header({ routeKey }) {
               ))}
             </div>
             <a className="mobile-nav-primary" href="#/about" onClick={() => setNavOpen(false)}>About me</a>
-            <div className="mobile-nav-currency" style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid rgba(238,240,232,.12)' }}>
+            <div className="mobile-nav-currency">
               <span className="mobile-nav-label">Currency</span>
               <CurrencySwitcher variant="pills" />
             </div>
