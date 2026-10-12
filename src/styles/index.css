@@ -81,6 +81,28 @@ main:focus{outline:none}
 .nav a[aria-current="page"]{color:var(--accent)}
 .wordmark{font:500 clamp(1.1rem,.8rem + 1.1vw,1.75rem)/1.1 var(--serif);letter-spacing:.03em;text-decoration:none;color:inherit;white-space:nowrap}
 .util{display:flex;justify-content:flex-end;align-items:center;gap:1.1rem}
+
+/* ---------- Currency Switcher ---------- */
+.currency-pills{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.currency-pill{min-height:44px;min-width:44px;padding:.5rem .85rem;border:1px solid var(--line);border-radius:var(--r-pill);background:var(--surface);color:var(--ink);font:500 .875rem/1 var(--sans);cursor:pointer;transition:background-color .2s,border-color .2s,color .2s;display:inline-flex;align-items:center;justify-content:center}
+.currency-pill:hover{border-color:var(--accent)}
+.currency-pill.active,.currency-pill[aria-pressed="true"]{background:var(--accent);color:var(--bar);border-color:var(--accent);font-weight:600}
+.site-header .currency-pills,.site-footer .currency-pills{margin-top:.5rem}
+.site-footer .currency-pill{background:rgba(238,240,232,.08);color:var(--on-brand);border-color:rgba(238,240,232,.2)}
+.site-footer .currency-pill:hover{border-color:var(--accent)}
+.site-footer .currency-pill.active{background:var(--accent);color:var(--bar);border-color:var(--accent)}
+
+.currency-menu-container{position:relative;display:inline-block}
+.currency-menu-btn{display:inline-flex;align-items:center;gap:.4rem;min-height:44px;min-width:44px;padding:.4rem .75rem;border:1px solid rgba(238,240,232,.22);border-radius:var(--r-pill);background:rgba(238,240,232,.08);color:inherit;font:500 .875rem/1 var(--sans);cursor:pointer;transition:background-color .2s,border-color .2s}
+.currency-menu-btn:hover{background:rgba(238,240,232,.16);border-color:var(--accent)}
+.currency-chevron{transition:transform .2s var(--ease-out)}
+.currency-chevron.open{transform:rotate(180deg)}
+.currency-menu-dropdown{position:absolute;top:calc(100% + .4rem);right:0;z-index:90;min-width:9.5rem;padding:.35rem;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:var(--r-md);box-shadow:var(--shadow-md);display:flex;flex-direction:column;gap:.2rem;animation:route-fade .18s var(--ease-out) both}
+.currency-menu-item{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:44px;padding:.5rem .85rem;border:0;border-radius:var(--r-sm);background:transparent;color:var(--ink);font:500 .875rem/1 var(--sans);text-align:left;cursor:pointer;transition:background-color .15s,color .15s}
+.currency-menu-item:hover,.currency-menu-item:focus-visible{background:var(--tile);outline:none}
+.currency-menu-item.active{background:color-mix(in srgb,var(--accent) 22%,var(--surface));color:var(--ink);font-weight:600}
+.currency-check{color:var(--brand);font-size:.875rem;font-weight:700}
+
 .site-header,.site-footer,.card-media,.card-info{transition:background-color .3s ease,color .3s ease,border-color .3s ease}
 .cart-btn{display:inline-flex;align-items:center;gap:.5rem;background:none;border:0;color:inherit;font:500 .9375rem/1 var(--sans);cursor:pointer;padding:.5rem 0}
 .count{min-width:1.4rem;height:1.4rem;border-radius:var(--r-pill);background:var(--accent);color:var(--bar);font-size:.75rem;font-weight:600;display:inline-grid;place-items:center;padding-inline:.35rem;transition:background-color .3s,color .3s}
